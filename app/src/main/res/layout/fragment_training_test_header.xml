@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_gravity="center"
-            style="@style/TonalityButtonStyle"
+            style="@style/Button.TonalityButtonStyle"
             android:text="A-dur"
             />
     <TextView

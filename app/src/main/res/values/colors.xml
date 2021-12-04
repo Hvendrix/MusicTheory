@@ -8,19 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="firstColor">#1B1464</color>
-    <color name="secondColor">#FF8F5E</color>
-    <color name="thirdColor">#E9E8F1</color>
-    <color name="mainBgColor">#FFFFFF</color>
+    <!-- custom colors block    -->
+    <color name="purple_900">#1B1464</color>
+    <color name="white_200">#E9E8F1</color>
+    <color name="orange_500">#FF8F5E</color>
     <color name="btnColorPressed">#C4C4C4</color>
 
 
-    <color name="btnsColor">#E9E8F1</color>
-    <color name="btnsColorPressed">#C4C4C4</color>
-    <color name="btnAnswerColor">#1B1464</color>
-<!--    <color name="mainBgColor">#FFFFFF</color>-->
-<!--    <color name="secondColor">#FF8F5E</color>-->
-<!--    <color name="thirdColor">#3700B3</color>-->
-    <color name="white_background">#E9E8F1</color>
-    <color name="primary_color">#FF8F5E</color>
 </resources>

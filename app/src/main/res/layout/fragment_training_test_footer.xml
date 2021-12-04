@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/secondColor"
+        android:background="?attr/colorSecondary"
         tools:context=".trainingtest.presentation.ui.fragment.TrainingTestFooterFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -17,7 +17,7 @@
             android:id="@+id/btnHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/DontKnowButtonStyle"
+            style="@style/Button.DontKnowButtonStyle"
             android:text="@string/dont_know"
             android:layout_gravity="center"
             />
