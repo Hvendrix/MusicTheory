@@ -3,5 +3,7 @@ package com.example.musictheory.account.loginScreen
 enum class PersonalAccountFragments {
     NONE,
     LOGIN,
-    REGISTRATION
+    REGISTRATION,
+    ACCOUNT,
+    ADDTEST
 }

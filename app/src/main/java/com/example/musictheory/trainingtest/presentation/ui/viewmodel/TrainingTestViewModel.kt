@@ -102,7 +102,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _serverResponseCollection.value = serverResponse.data.collection[0]
         _serverResponseCollectionList.value = serverResponse.data.collection
         _serverResponseCollectionList.value.forEach {
-            if (it.sectionsId == currentQuestionOid.value) {
+            if (it.id.oid == currentQuestionOid.value) {
                 _serverResponseCollection.value = it
             }
         }

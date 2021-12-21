@@ -25,8 +25,9 @@
     <string name="exit">Выйти</string>
     <string name="student_login_fragment_registration_button">Регистрация</string>
     <string name="personal_account_title">Личный кабинет</string>
+    <string name="welcome_title">Добро пожаловать!</string>
     <string name="personal_account_back_button">Back</string>
-    <string name="web_client_id"></string>
+    <string name="web_client_id">7061348269-mkqqh70081m84sj87040j6dupbmdsa62.apps.googleusercontent.com</string>
     <string name="account">Account</string>
     <string name="TestName">Название теста</string>
     <string name="question">Вопрос</string>
@@ -38,4 +39,7 @@
     <string name="delete_tests">Удалить тесты</string>
     <string name="teacher">Учитель</string>
     <string name="num_stars">"5"</string>
+    <string name="signup_question">Нет аккаунта?</string>
+    <string name="have_account_question">Есть аккаунт?</string>
+    <string name="enter_button_text">Авторизоваться</string>
 </resources>

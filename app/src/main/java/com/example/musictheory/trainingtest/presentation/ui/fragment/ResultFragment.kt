@@ -85,7 +85,7 @@ class ResultFragment : Fragment() {
             allCount
         )
         val numStars = R.integer.num_stars
-        binding.progress.progress = numStars * (allCount - result.mistakeCount) / allCount
+        binding.progress.progress = 5 * (allCount - result.mistakeCount) / allCount
     }
 
     companion object {

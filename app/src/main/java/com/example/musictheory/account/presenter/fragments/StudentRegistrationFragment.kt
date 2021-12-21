@@ -95,6 +95,11 @@ class StudentRegistrationFragment : Fragment() {
         binding.signInButton.setOnClickListener {
             signIn()
         }
+
+        binding.loginButton.setOnClickListener {
+            personalAccountViewModel.setRegister(PersonalAccountFragments.LOGIN)
+        }
+
         binding.registerButton.setOnClickListener {
             postSignUpToServer(
                 binding.loginEt.text.toString().trim(),
@@ -109,6 +114,7 @@ class StudentRegistrationFragment : Fragment() {
                 launch {
                     personalAccountViewModel.email.collect {
                         if (it != null && it.name.isNotEmpty() && it.role.isNotEmpty()) {
+                            personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
 //                            if (activity is MainActivityCallback) {
 //                                (activity as MainActivityCallback).goAccount(it.name, it.role)
 //                            }
@@ -199,8 +205,17 @@ class StudentRegistrationFragment : Fragment() {
             val account = completedTask.getResult(ApiException::class.java)
             val idToken = account.idToken
 
+            if (account != null && account.idToken != null && account.email != null) {
+                postSignUpToServer(
+                    account.idToken,
+                    account.email,
+                    binding.checkboxTeacher.isChecked,
+                    ""
+                )
+            }
+
             // Signed in successfully, show authenticated UI.
-            updateUI(account)
+//            updateUI(account)
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

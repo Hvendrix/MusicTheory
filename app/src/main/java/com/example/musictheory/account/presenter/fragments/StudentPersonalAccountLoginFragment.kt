@@ -38,6 +38,7 @@ class StudentPersonalAccountLoginFragment : Fragment() {
                         PersonalAccountFragments.REGISTRATION -> {
                             val studentRegistrationFragment = StudentRegistrationFragment()
                             childFragmentManager.beginTransaction().apply {
+                                disallowAddToBackStack()
                                 replace(R.id.login_body, studentRegistrationFragment)
                                 commit()
                             }
@@ -45,7 +46,23 @@ class StudentPersonalAccountLoginFragment : Fragment() {
                         PersonalAccountFragments.LOGIN -> {
                             val studentRegistrationFragment = StudentLoginFragment()
                             childFragmentManager.beginTransaction().apply {
+                                disallowAddToBackStack()
                                 replace(R.id.login_body, studentRegistrationFragment)
+                                commit()
+                            }
+                        }
+                        PersonalAccountFragments.ACCOUNT -> {
+                            val accountFragment = AccountFragment()
+                            childFragmentManager.beginTransaction().apply {
+                                disallowAddToBackStack()
+                                replace(R.id.login_body, accountFragment)
+                                commit()
+                            }
+                        }
+                        PersonalAccountFragments.ADDTEST -> {
+                            val addTestFragment = AddTestFragment()
+                            childFragmentManager.beginTransaction().apply {
+                                replace(R.id.login_body, addTestFragment)
                                 commit()
                             }
                         }
@@ -59,6 +76,7 @@ class StudentPersonalAccountLoginFragment : Fragment() {
     private fun initNestedFragments() {
         val studentLoginFragment = StudentLoginFragment()
         childFragmentManager.beginTransaction().apply {
+            disallowAddToBackStack()
             add(R.id.login_body, studentLoginFragment)
             commit()
         }

@@ -19,7 +19,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.musictheory.R
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
-import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentStudentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -105,9 +104,10 @@ class StudentLoginFragment : Fragment() {
                 launch {
                     personalAccountViewModel.email.collect {
                         if (it != null && it.name.isNotEmpty() && it.role.isNotEmpty()) {
-                            if (activity is MainActivityCallback) {
-                                (activity as MainActivityCallback).goAccount(it.name, it.role)
-                            }
+                            personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
+//                            if (activity is MainActivityCallback) {
+//                                (activity as MainActivityCallback).goAccount(it.name, it.role)
+//                            }
                         }
                     }
                 }

@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
                 R.id.nested_navigation_home,
                 R.id.navigation_dashboard,
                 R.id.navigation_notifications,
-                R.id.action_global_nested_navigation_training_test,
                 R.id.action_global_nested_personal_account
             )
         )
@@ -130,10 +129,11 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
 //        bundle.putString("role", role)
 //        Timber.v("t1 email " + email)
 //        navController.navigate(R.id.action_studentPersonalAccountLoginFragment_to_accountFragment, bundle)
-        navController.navigate(
-            R.id.action_studentPersonalAccountLoginFragment_to_accountFragment
-//            bundle
-        )
+//        navController.navigate(
+//            R.id.action_studentPersonalAccountLoginFragment_to_accountFragment
+// //            bundle
+//        )
+        navController.navigate(R.id.accountFragment)
     }
 
     override fun onDestroy() {
