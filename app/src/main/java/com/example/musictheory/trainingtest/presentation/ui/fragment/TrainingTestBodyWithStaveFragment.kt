@@ -1,10 +1,13 @@
 package com.example.musictheory.trainingtest.presentation.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +46,10 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
                     adapter.updateData(it)
                 }
         }
+
+        createSignView(binding)
+        createSignView(binding)
+        createSignView(binding)
 
         return binding.root
     }
@@ -84,5 +91,43 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
             trainingTestViewModel.setMistake(item)
             Toast.makeText(context, "Неправильно", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun createSignView(
+        binding: FragmentTrainingTestBodyWithStaveBinding,
+        choicedImg: Int = R.drawable.int_note,
+//        noteList: MutableList<ImageView>,
+//        signTriple: Triple<Float, Float, String>,
+        heightSize: Int = 52,
+        widthSize: Int = 52,
+//        horPos: Float,
+//        vertPos: Float,
+//        vertBias: Float,
+//        horChang: Float
+    ){
+        //почему то срабаоывает на одиночный numPick
+
+        val signView = ImageView(this.context)
+        signView.id = View.generateViewId()
+//        noteList.add(signView)
+        signView.setImageResource(choicedImg)
+
+        binding.signsOnStave.addView(signView)
+
+//        binding.linParent.addView(signView)
+//        binding.constraintLayout.addView(signView)
+        signView.layoutParams.height = heightSize
+        signView.layoutParams.width = widthSize
+        binding.signsOnStave.requestLayout()
+//        var set = ConstraintSet()
+//        set.clone(binding.constraintLayout)
+//        set.connect(signView.id, ConstraintSet.LEFT, binding.imgStave.id, ConstraintSet.LEFT)
+//        set.connect(signView.id, ConstraintSet.RIGHT, binding.imgStave.id, ConstraintSet.RIGHT)
+//        set.connect(signView.id, ConstraintSet.TOP, binding.imgStave.id, ConstraintSet.TOP)
+//        set.connect(signView.id, ConstraintSet.BOTTOM, binding.imgStave.id, ConstraintSet.BOTTOM)
+//        set.setHorizontalBias(signView.id, horPos + horChang)
+//        set.setVerticalBias(signView.id, vertPos + vertBias)
+//        set.applyTo(binding.constraintLayout)
+//        Log.i("xxx", "Параметры были ${horPos}, $vertPos, $choicedImg, ")
     }
 }

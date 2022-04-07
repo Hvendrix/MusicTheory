@@ -10,22 +10,22 @@ import timber.log.Timber
  */
 object ExecutorBuildType {
     fun execute() {
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork() // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build()
-        )
-        StrictMode.setVmPolicy(
-            StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build()
-        )
+//        StrictMode.setThreadPolicy(
+//            StrictMode.ThreadPolicy.Builder()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+//                .detectNetwork() // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build()
+//        )
+//        StrictMode.setVmPolicy(
+//            StrictMode.VmPolicy.Builder()
+//                .detectLeakedSqlLiteObjects()
+//                .detectLeakedClosableObjects()
+//                .penaltyLog()
+//                .penaltyDeath()
+//                .build()
+//        )
         Timber.plant(Timber.DebugTree())
     }
 
