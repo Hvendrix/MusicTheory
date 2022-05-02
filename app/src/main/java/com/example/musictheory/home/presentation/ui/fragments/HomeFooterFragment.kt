@@ -1,4 +1,4 @@
-package com.example.musictheory.home.homeFragments
+package com.example.musictheory.home.presentation.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.musictheory.R
 
-class HomeHeaderFragment : Fragment() {
+class HomeFooterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -18,6 +18,6 @@ class HomeHeaderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_header, container, false)
+        return inflater.inflate(R.layout.fragment_home_footer, container, false)
     }
 }

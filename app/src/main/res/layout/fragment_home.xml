@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
         android:background="?attr/windowBackground"
-    tools:context=".home.homeFragments.HomeFragment">
+    tools:context=".home.presentation.ui.fragments.HomeFragment">
 
     <ImageView
             android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height"
-            android:name="com.example.musictheory.home.homeFragments.HomeHeaderFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeHeaderFragment"
             app:layout_constraintBottom_toTopOf="@+id/header_gl"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height"
-            android:name="com.example.musictheory.home.homeFragments.HomeBodyFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeBodyFragment"
             app:layout_constraintBottom_toTopOf="@+id/footer_gl"
             app:layout_constraintTop_toBottomOf="@+id/home_header"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height"
-            android:name="com.example.musictheory.home.homeFragments.HomeFooterFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeFooterFragment"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/footer_gl"
             app:layout_constraintStart_toStartOf="parent"

@@ -4,6 +4,9 @@ import com.example.musictheory.account.data.model.MusicTestWithoutId
 import com.example.musictheory.account.data.model.PostMusicTest
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
+import com.example.musictheory.home.presentation.model.Id
+import com.example.musictheory.trainingtest.data.model.MusicTest
+import com.example.musictheory.trainingtest.data.model.ServerDataMusicTest
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,6 +20,17 @@ class TrainingTestInteractor(
     suspend fun getTests(): ServerResponseMusicTest = withContext(Dispatchers.IO) {
         return@withContext mainRepository.getMusicTest("tests")
             .execute().body() ?: error("not found")
+    }
+    suspend fun getLocalTests(): ServerResponseMusicTest =
+        withContext(Dispatchers.IO){
+            return@withContext ServerResponseMusicTest(ServerDataMusicTest("tests", listOf(MusicTest(
+                Id("1"),
+                "1",
+                listOf("какая нота"),
+                listOf(listOf("фа", "до", "соль")),
+                listOf("stave"),
+                "знаки"
+            ))))
     }
 
     suspend fun postTest(

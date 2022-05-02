@@ -3,7 +3,7 @@ package com.example.musictheory.trainingtest.presentation.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musictheory.core.data.Repository
-import com.example.musictheory.home.homeModel.Id
+import com.example.musictheory.home.presentation.model.Id
 import com.example.musictheory.model.Result
 import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.example.musictheory.trainingtest.data.model.MusicTestEntity
@@ -91,6 +91,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     suspend fun getTests(): ServerResponseMusicTest {
         return trainingTestInteractor.getTests()
+//        return trainingTestInteractor.getLocalTests()
     }
 
     suspend fun postTest() {

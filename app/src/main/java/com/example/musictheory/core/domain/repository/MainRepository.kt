@@ -6,8 +6,8 @@ import com.example.musictheory.account.data.model.PostMusicTest
 import com.example.musictheory.account.data.model.PostSignUp
 import com.example.musictheory.account.data.model.ResponseLogin
 import com.example.musictheory.core.data.model.ServerResponse
-import com.example.musictheory.home.homeModel.PostSection
-import com.example.musictheory.home.homeModel.SectionsCollection
+import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.home.presentation.model.SectionsCollection
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -20,6 +20,8 @@ interface MainRepository {
     suspend fun getCollectionByName(collectionName: String): Call<ServerResponse>
 
     suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest>
+
+    suspend fun getCategories(): Call<ServerResponseMusicTest>
 
     suspend fun postSection(
         serverData: PostSection
@@ -44,4 +46,5 @@ interface MainRepository {
     suspend fun postLogin(
         postLogin: PostLogin
     ): Call<ResponseLogin>
+
 }

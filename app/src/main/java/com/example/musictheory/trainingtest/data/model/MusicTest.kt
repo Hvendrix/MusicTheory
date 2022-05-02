@@ -1,6 +1,6 @@
 package com.example.musictheory.trainingtest.data.model
 
-import com.example.musictheory.home.homeModel.Id
+import com.example.musictheory.home.presentation.model.Id
 import com.google.gson.annotations.SerializedName
 
 /**

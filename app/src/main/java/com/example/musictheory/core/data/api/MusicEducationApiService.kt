@@ -6,11 +6,12 @@ import com.example.musictheory.account.data.model.PostMusicTest
 import com.example.musictheory.account.data.model.PostSignUp
 import com.example.musictheory.account.data.model.ResponseLogin
 import com.example.musictheory.core.data.model.ServerResponse
-import com.example.musictheory.home.homeModel.PostSection
-import com.example.musictheory.home.homeModel.SectionsCollection
+import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.home.presentation.model.SectionsCollection
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -28,7 +29,14 @@ interface MusicEducationApiService {
 
     @GET("get_data")
     fun getMusicTest(
-        @Query("collection_name") collectionName: String
+        @Query("collection_name")
+        collectionName: String
+    ): Call<ServerResponseMusicTest>
+
+    @GET("get_data")
+    fun getCategories(
+        @Query("collection_name")
+        collectionName: String = "tests"
     ): Call<ServerResponseMusicTest>
 
     @POST("put_data/")

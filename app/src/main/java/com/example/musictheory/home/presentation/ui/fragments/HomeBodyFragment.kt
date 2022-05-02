@@ -1,4 +1,4 @@
-package com.example.musictheory.home.homeFragments
+package com.example.musictheory.home.presentation.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musictheory.R
 import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentHomeBodyBinding
-import com.example.musictheory.home.homeAdapter.CategoriesAdapter
-import com.example.musictheory.home.homeViewModel.HomeViewModel
+import com.example.musictheory.home.presentation.ui.lists.adapters.CategoriesAdapter
+import com.example.musictheory.home.presentation.ui.viewmodels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,6 +48,7 @@ class HomeBodyFragment : Fragment() {
             }
         )
         setUpRecyclerView(categoriesAdapter)
+        homeViewModel.getCategories()
 
         homeViewModel.categories.observe(
             viewLifecycleOwner,

@@ -1,7 +1,8 @@
-package com.example.musictheory.home.homeAdapter
+package com.example.musictheory.home.presentation.ui.lists.viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musictheory.databinding.TestCategoryCardBinding
+import com.example.musictheory.home.presentation.ui.lists.adapters.CategoriesAdapter
 import com.example.musictheory.trainingtest.data.model.MusicTest
 
 class CategoriesViewHolder(

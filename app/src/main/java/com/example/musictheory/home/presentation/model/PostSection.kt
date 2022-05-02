@@ -1,4 +1,4 @@
-package com.example.musictheory.home.homeModel
+package com.example.musictheory.home.presentation.model
 
 import com.google.gson.annotations.SerializedName
 

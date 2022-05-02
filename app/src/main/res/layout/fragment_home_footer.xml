@@ -5,6 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.example.musictheory.home.homeFragments.HomeFooterFragment"
-        tools:context=".home.homeFragments.HomeFooterFragment">
+        tools:context=".home.presentation.ui.fragments.HomeFooterFragment">
 
 </FrameLayout>

@@ -7,8 +7,9 @@ import com.example.musictheory.account.data.model.PostSignUp
 import com.example.musictheory.account.data.model.ResponseLogin
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.core.domain.repository.MainRepository
-import com.example.musictheory.home.homeModel.PostSection
+import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.trainingtest.data.model.PostResult
+import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
 
 /**
@@ -26,6 +27,9 @@ class MainRepositoryImpl(
     override suspend fun getMusicTest(
         collectionName: String
     ) = apiHelper.getMusicTest(collectionName)
+
+    override suspend fun getCategories()
+     = apiHelper.getCategories()
 
     override suspend fun postSection(
         serverData: PostSection

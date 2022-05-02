@@ -69,21 +69,21 @@
         app:startDestination="@id/navigation_home">
         <fragment
             android:id="@+id/homeHeaderFragment"
-            android:name="com.example.musictheory.home.homeFragments.HomeHeaderFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeHeaderFragment"
             android:label="fragment_home_header"
             tools:layout="@layout/fragment_home_header" />
         <fragment
             android:id="@+id/homeFooterFragment"
-            android:name="com.example.musictheory.home.homeFragments.HomeFooterFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeFooterFragment"
             android:label="fragment_home_footer"
             tools:layout="@layout/fragment_home_footer" />
         <fragment
             android:id="@+id/homeBodyFragment"
-            android:name="com.example.musictheory.home.homeFragments.HomeBodyFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeBodyFragment"
             android:label="HomeBodyFragment" />
         <fragment
             android:id="@+id/navigation_home"
-            android:name="com.example.musictheory.home.homeFragments.HomeFragment"
+            android:name="com.example.musictheory.home.presentation.ui.fragments.HomeFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home"/>
         <action

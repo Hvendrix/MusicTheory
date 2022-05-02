@@ -1,4 +1,4 @@
-package com.example.musictheory.home.homeFragments
+package com.example.musictheory.home.presentation.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Observer
 import com.example.musictheory.R
-import com.example.musictheory.home.homeViewModel.HomeViewModel
+import com.example.musictheory.home.presentation.ui.viewmodels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

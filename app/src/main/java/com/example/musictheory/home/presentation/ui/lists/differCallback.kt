@@ -1,4 +1,4 @@
-package com.example.musictheory.home
+package com.example.musictheory.home.presentation.ui.lists
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.musictheory.trainingtest.data.model.MusicTest
