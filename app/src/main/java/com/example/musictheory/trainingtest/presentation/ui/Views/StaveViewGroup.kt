@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.annotation.AttrRes
 import com.example.musictheory.R
-import timber.log.Timber
 
 class StaveViewGroup @JvmOverloads constructor(
     context: Context,
@@ -24,58 +23,48 @@ class StaveViewGroup @JvmOverloads constructor(
 //            setMeasuredDimension(width, height)
 //            return
 //        }
-        Timber.i("t2 width size " + width + "height Size " + height)
-//        val widthSpec = MeasureSpec.makeMeasureSpec(width / childCount, MeasureSpec.EXACTLY)
-//        val heightSpec = MeasureSpec.makeMeasureSpec(height / childCount, MeasureSpec.EXACTLY)
-        val specSize = (MeasureSpec.getSize(heightMeasureSpec))/10
-        val widthSpec = MeasureSpec.makeMeasureSpec(specSize, MeasureSpec.EXACTLY)
-        val heightSpec = MeasureSpec.makeMeasureSpec(specSize, MeasureSpec.EXACTLY)
-//        val widthSpec = MeasureSpec.makeMeasureSpec(52, MeasureSpec.AT_MOST)
-//        val heightSpec = MeasureSpec.makeMeasureSpec(52, MeasureSpec.AT_MOST)
+        val scale = 1
+        val widthSpec = MeasureSpec.makeMeasureSpec((16*density*scale).toInt(), MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec((11*density*scale).toInt(), MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
-//            getChildAt(i).measure(widthSpec, heightSpec)
             getChildAt(i).measure(widthSpec, heightSpec)
-//            getChildAt(i).measure(50, 50)
 
-            Timber.i("t2 child width" + getChildAt(i).width + "height Size " + height)
         }
-
-//        setMeasuredDimension(width, height)
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        var currentLeft = 0
+        var x = paddingLeft + 100
+        var y = 0
         for (i in 0 until childCount) {
-            getChildAt(i).layout(10*density.toInt(), 45*density.toInt(), (45*density.toInt()) + getChildAt(i).measuredWidth, getChildAt(i).measuredHeight )
-//            getChildAt(i).layout(currentLeft, 0, currentLeft + measuredWidth / childCount, measuredHeight)
-//            getChildAt(i).layout(currentLeft, 0, currentLeft + getChildAt(i).measuredWidth, getChildAt(i).measuredHeight)
-//            getChildAt(i).measure(52, 52)
-            currentLeft += measuredWidth / childCount
+            getChildAt(i).let{
+                if(it is IntNoteImage){
+                    y = defineLineCoordinate(it.getAttr())
+                }
+                it.layout(
+                    x,
+                    y,
+                    x+it.measuredWidth,
+                    y+it.measuredHeight
+                )
+
+            }
+            x += measuredWidth / childCount
+            y += (5f*density).toInt()
         }
+
     }
 
 
+
     override fun dispatchDraw(canvas: Canvas?) {
-
         val path = Path().apply{
-            val width = (MeasureSpec.getSize(measuredWidth).toFloat()-10f)*density
+            val width = MeasureSpec.getSize(measuredWidth).toFloat()
+            // лучше вынести вычисления отсюда
             for(i in 10..50 step 10) {
-                moveTo(10f * density, i * density)
-                lineTo(width, i * density)
+                moveTo(paddingStart.toFloat(), i * density)
+                lineTo(width - paddingEnd.toFloat(), i * density)
             }
-
-
-//            moveTo(10f, 100f)
-//            lineTo(300f, 100f)
-//            moveTo(10f, 200f)
-//            lineTo(300f, 200f)
-//            moveTo(10f, 300f)
-//            lineTo(300f, 300f)
-//            moveTo(10f, 400f)
-//            lineTo(300f, 400f)
-//            lineTo(300f, 300f)
-
             close()
         }
         canvas?.drawPath(path, paint)
@@ -91,5 +80,11 @@ class StaveViewGroup @JvmOverloads constructor(
 
     }
     val density = context.resources.displayMetrics.density
+
+    private fun defineLineCoordinate(lineNum: Float): Int{
+        var biasView = 0
+        return ((11-lineNum*2)*5f*density).toInt()
+
+    }
 
 }

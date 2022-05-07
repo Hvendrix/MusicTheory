@@ -90,8 +90,9 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     suspend fun getTests(): ServerResponseMusicTest {
-        return trainingTestInteractor.getTests()
-//        return trainingTestInteractor.getLocalTests()
+        _currentQuestionOid.value = "1"
+//        return trainingTestInteractor.getTests()
+        return trainingTestInteractor.getLocalTests()
     }
 
     suspend fun postTest() {

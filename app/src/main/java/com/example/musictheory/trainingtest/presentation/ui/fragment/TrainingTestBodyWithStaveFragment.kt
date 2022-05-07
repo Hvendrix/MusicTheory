@@ -1,18 +1,16 @@
 package com.example.musictheory.trainingtest.presentation.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.musictheory.R
 import com.example.musictheory.databinding.FragmentTrainingTestBodyWithStaveBinding
+import com.example.musictheory.trainingtest.presentation.ui.Views.IntNoteImage
 import com.example.musictheory.trainingtest.presentation.ui.list.adapter.AdapterTrainingTestBody
 import com.example.musictheory.trainingtest.presentation.ui.list.viewholder.OnItemClickListener
 import com.example.musictheory.trainingtest.presentation.ui.viewmodel.TrainingTestViewModel
@@ -47,9 +45,17 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
                 }
         }
 
-        createSignView(binding)
-        createSignView(binding)
-        createSignView(binding)
+        createSignView(binding, 1f)
+        createSignView(binding, 1.5f)
+        createSignView(binding, 2f)
+        createSignView(binding, 2.5f)
+        createSignView(binding, 3f)
+        createSignView(binding, 3.5f)
+        createSignView(binding, 4f)
+        createSignView(binding, 4.5f)
+        createSignView(binding, 5f)
+        createSignView(binding, 5.5f)
+        binding.signsOnStave.requestLayout()
 
         return binding.root
     }
@@ -95,39 +101,14 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
 
     private fun createSignView(
         binding: FragmentTrainingTestBodyWithStaveBinding,
-        choicedImg: Int = R.drawable.int_note,
-//        noteList: MutableList<ImageView>,
-//        signTriple: Triple<Float, Float, String>,
-        heightSize: Int = 52,
-        widthSize: Int = 52,
-//        horPos: Float,
-//        vertPos: Float,
-//        vertBias: Float,
-//        horChang: Float
+        numLine: Float = 1f,
+        selectedImg: Int = R.drawable.ic_int_note,
     ){
-        //почему то срабаоывает на одиночный numPick
-
-        val signView = ImageView(this.context)
+        val signView = IntNoteImage(this.requireContext())
         signView.id = View.generateViewId()
-//        noteList.add(signView)
-        signView.setImageResource(choicedImg)
-
+        signView.setImageResource(selectedImg)
+        signView.setAttr(numLine)
         binding.signsOnStave.addView(signView)
 
-//        binding.linParent.addView(signView)
-//        binding.constraintLayout.addView(signView)
-        signView.layoutParams.height = heightSize
-        signView.layoutParams.width = widthSize
-        binding.signsOnStave.requestLayout()
-//        var set = ConstraintSet()
-//        set.clone(binding.constraintLayout)
-//        set.connect(signView.id, ConstraintSet.LEFT, binding.imgStave.id, ConstraintSet.LEFT)
-//        set.connect(signView.id, ConstraintSet.RIGHT, binding.imgStave.id, ConstraintSet.RIGHT)
-//        set.connect(signView.id, ConstraintSet.TOP, binding.imgStave.id, ConstraintSet.TOP)
-//        set.connect(signView.id, ConstraintSet.BOTTOM, binding.imgStave.id, ConstraintSet.BOTTOM)
-//        set.setHorizontalBias(signView.id, horPos + horChang)
-//        set.setVerticalBias(signView.id, vertPos + vertBias)
-//        set.applyTo(binding.constraintLayout)
-//        Log.i("xxx", "Параметры были ${horPos}, $vertPos, $choicedImg, ")
     }
 }

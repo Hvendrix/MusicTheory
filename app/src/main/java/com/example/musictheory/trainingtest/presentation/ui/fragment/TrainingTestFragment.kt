@@ -81,12 +81,16 @@ class TrainingTestFragment : Fragment() {
                 }
                 launch {
                     trainingTestViewModel.currentQuestionOid.collect {
-                        if (it.isNotEmpty()) {
-                            lifecycleScope.launch {
-                                val tests = async { trainingTestViewModel.getTests() }
-                                trainingTestViewModel.getData(tests.await())
-                            }
+                        lifecycleScope.launch {
+                            val tests = async { trainingTestViewModel.getTests() }
+                            trainingTestViewModel.getData(tests.await())
                         }
+//                        if (it.isNotEmpty()) {
+//                            lifecycleScope.launch {
+//                                val tests = async { trainingTestViewModel.getTests() }
+//                                trainingTestViewModel.getData(tests.await())
+//                            }
+//                        }
                     }
                 }
             }
@@ -104,9 +108,15 @@ class TrainingTestFragment : Fragment() {
             commit()
         }
 
-        val trainingTestBodyFragment = TrainingTestBodyFragment()
+//        val trainingTestBodyFragment = TrainingTestBodyFragment()
+//        childFragmentManager.beginTransaction().apply {
+//            add(R.id.bodyTrainingTest, trainingTestBodyFragment)
+//            commit()
+//        }
+
+        val trainingTestBodyWithStaveFragment = TrainingTestBodyWithStaveFragment()
         childFragmentManager.beginTransaction().apply {
-            add(R.id.bodyTrainingTest, trainingTestBodyFragment)
+            add(R.id.bodyTrainingTest, trainingTestBodyWithStaveFragment)
             commit()
         }
 
