@@ -65,8 +65,9 @@ class AccountInteractor(
                         answerArray = listOf(
                             listOf("yes", "no")
                         ),
-                        displayedElements = listOf("none"),
-                        "Name"
+                        uiType = listOf("none"),
+                        displayedElements = listOf(),
+                        testName = "Name"
                     )
                 )
             )
@@ -77,8 +78,9 @@ class AccountInteractor(
     suspend fun postTest(
         questionArray: List<String>,
         answerArray: List<List<String>>,
-        displayedElement: List<String>,
-        testName: String
+        uiType: List<String>,
+        testName: String,
+        displayedElement: List<List<String>> = listOf(),
     ) = withContext(Dispatchers.IO) {
         mainRepository.postTest(
             PostMusicTest(
@@ -88,6 +90,7 @@ class AccountInteractor(
                         sectionsId = "1",
                         questionArray = questionArray,
                         answerArray = answerArray,
+                        uiType = uiType,
                         displayedElements = displayedElement,
                         testName = testName
                     )

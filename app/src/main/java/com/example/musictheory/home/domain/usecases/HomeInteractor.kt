@@ -3,6 +3,7 @@ package com.example.musictheory.home.domain.usecases
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
 import com.example.musictheory.home.presentation.model.Id
+import com.example.musictheory.trainingtest.data.model.DisplayedElement
 import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.example.musictheory.trainingtest.data.model.ServerDataMusicTest
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
@@ -25,6 +26,7 @@ class HomeInteractor(
             listOf("какая нота"),
             listOf(listOf("фа", "до", "соль")),
             listOf("stave"),
+            listOf(listOf("фа")),
             "знаки"
         ))))
     }

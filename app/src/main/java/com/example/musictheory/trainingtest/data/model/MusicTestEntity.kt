@@ -1,6 +1,7 @@
 package com.example.musictheory.trainingtest.data.model
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -8,13 +9,17 @@ import androidx.room.PrimaryKey
 data class MusicTestEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val id: String,
+    var id: String,
     @ColumnInfo(name = "sections_id")
-    val sectionsId: String,
+    var sectionsId: String,
     @ColumnInfo(name = "question_array")
-    val questionArray: List<String>,
+    var questionArray: List<String>,
     @ColumnInfo(name = "answer_array")
-    val answerArray: List<List<String>>,
+    var answerArray: List<List<String>>,
+    @ColumnInfo(name = "ui_type")
+    var uiType: List<String>,
     @ColumnInfo(name = "displayed_elements")
-    val displayedElements: List<String>
+    var displayedElements: List<List<String>>
 )
+
+

@@ -15,8 +15,10 @@ data class MusicTest(
     val questionArray: List<String>,
     @SerializedName("answer_array")
     val answerArray: List<List<String>>,
-    @SerializedName("dislpayed_elemets")
-    val displayedElements: List<String>,
+    @SerializedName("ui_type")
+    val uiType: List<String>,
+    @SerializedName("displayed_elements")
+    val displayedElements: List<List<String>>,
     @SerializedName("test_name")
     val testName: String
 )

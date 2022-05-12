@@ -5,6 +5,7 @@ import com.example.musictheory.account.data.model.PostMusicTest
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
 import com.example.musictheory.home.presentation.model.Id
+import com.example.musictheory.trainingtest.data.model.DisplayedElement
 import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.example.musictheory.trainingtest.data.model.ServerDataMusicTest
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
@@ -29,15 +30,30 @@ class TrainingTestInteractor(
                 listOf("какая нота"),
                 listOf(listOf("фа", "до", "соль")),
                 listOf("stave"),
+                listOf(listOf("фа")),
                 "знаки"
             ))))
     }
 
+    suspend fun getLocalTests2(): ServerResponseMusicTest =
+        withContext(Dispatchers.IO){
+            return@withContext ServerResponseMusicTest(ServerDataMusicTest("tests", listOf(MusicTest(
+                Id("1"),
+                "1",
+                listOf("какая это нота"),
+                listOf(listOf("ми", "фа", "соль", "ля", "си", "до2", "ре2")),
+                listOf("stave random pick"),
+                listOf(listOf()),
+                "знаки"
+            ))))
+        }
+
     suspend fun postTest(
         questionArray: List<String>,
         answerArray: List<List<String>>,
-        displayedElement: List<String>,
-        testName: String
+        uiType: List<String>,
+        testName: String,
+        displayedElement: List<List<String>>,
     ) = withContext(Dispatchers.IO) {
         mainRepository.postTest(
             PostMusicTest(
@@ -47,8 +63,9 @@ class TrainingTestInteractor(
                         sectionsId = "1",
                         questionArray = questionArray,
                         answerArray = answerArray,
+                        uiType = uiType,
+                        testName = testName,
                         displayedElements = displayedElement,
-                        testName = testName
                     )
                 )
             )

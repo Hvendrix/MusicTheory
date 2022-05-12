@@ -46,28 +46,28 @@ class TrainingTestFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     trainingTestViewModel.goNextEvent.collect {
-                        if (it) {
-                            var nextBodyFragment: Fragment? = null
-                            when (trainingTestViewModel.displayedElements.value) {
-                                "none" -> {
-                                    nextBodyFragment =
-                                        TrainingTestBodyWithStaveFragment()
-                                }
-                                "stave" -> {
-                                    nextBodyFragment =
-                                        TrainingTestBodyWithStaveFragment()
-                                }
-                            }
-                            if (nextBodyFragment != null) {
-                                childFragmentManager.commit {
-                                    disallowAddToBackStack()
-                                    replace(
-                                        R.id.bodyTrainingTest,
-                                        nextBodyFragment
-                                    )
-                                }
-                            }
-                        }
+//                        if (it) {
+//                            var nextBodyFragment: Fragment? = null
+//                            when (trainingTestViewModel.uiType.value) {
+//                                "none" -> {
+//                                    nextBodyFragment =
+//                                        TrainingTestBodyWithStaveFragment()
+//                                }
+//                                "stave" -> {
+//                                    nextBodyFragment =
+//                                        TrainingTestBodyWithStaveFragment()
+//                                }
+//                            }
+//                            if (nextBodyFragment != null) {
+//                                childFragmentManager.commit {
+//                                    disallowAddToBackStack()
+//                                    replace(
+//                                        R.id.bodyTrainingTest,
+//                                        nextBodyFragment
+//                                    )
+//                                }
+//                            }
+//                        }
                     }
                 }
                 launch {
@@ -93,12 +93,44 @@ class TrainingTestFragment : Fragment() {
 //                        }
                     }
                 }
+                launch {
+                    trainingTestViewModel.uiType.collect {
+                        changeUitype()
+                    }
+                }
             }
         }
         val oid = arguments?.getString("categoryNumber")
         trainingTestViewModel.setOid(oid.toString())
 
         return binding.root
+    }
+
+    fun changeUitype(){
+            var nextBodyFragment: Fragment? = null
+            when (trainingTestViewModel.uiType.value) {
+                "none" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyFragment()
+                }
+                "stave" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyWithStaveFragment()
+                }
+                "stave random pick" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyWithStaveFragment()
+                }
+            }
+            if (nextBodyFragment != null) {
+                childFragmentManager.commit {
+                    disallowAddToBackStack()
+                    replace(
+                        R.id.bodyTrainingTest,
+                        nextBodyFragment
+                    )
+                }
+            }
     }
 
     private fun initNestedFragments() {
@@ -114,11 +146,11 @@ class TrainingTestFragment : Fragment() {
 //            commit()
 //        }
 
-        val trainingTestBodyWithStaveFragment = TrainingTestBodyWithStaveFragment()
-        childFragmentManager.beginTransaction().apply {
-            add(R.id.bodyTrainingTest, trainingTestBodyWithStaveFragment)
-            commit()
-        }
+//        val trainingTestBodyWithStaveFragment = TrainingTestBodyWithStaveFragment()
+//        childFragmentManager.beginTransaction().apply {
+//            add(R.id.bodyTrainingTest, trainingTestBodyWithStaveFragment)
+//            commit()
+//        }
 
         val trainingFragmentFooterFragment = TrainingTestFooterFragment()
         childFragmentManager.beginTransaction().apply {

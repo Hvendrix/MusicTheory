@@ -11,14 +11,14 @@ class AddTestViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var accountInteractor: AccountInteractor
 
-    suspend fun postTestToServer(
-        questionArray: List<String>,
-        answerArray: List<List<String>>,
-        displayedElement: List<String>,
-        testName: String
-    ) {
-        val x = accountInteractor.postTest(questionArray, answerArray, displayedElement, testName)
-    }
+//    suspend fun postTestToServer(
+//        questionArray: List<String>,
+//        answerArray: List<List<String>>,
+//        displayedElement: List<String>,
+//        testName: String
+//    ) {
+//        val x = accountInteractor.postTest(questionArray, answerArray, displayedElement, testName)
+//    }
 
     suspend fun postDeleteTest() {
         accountInteractor.postDeleteTest()

@@ -55,10 +55,10 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
     suspend fun postTestToServer(
         questionArray: List<String>,
         answerArray: List<List<String>>,
-        displayedElement: List<String>,
+        uiType: List<String>,
         testName: String
     ) {
-        val x = accountInteractor.postTest(questionArray, answerArray, displayedElement, testName)
+        val x = accountInteractor.postTest(questionArray, answerArray, uiType, testName)
     }
 
     suspend fun postDeleteTest() {

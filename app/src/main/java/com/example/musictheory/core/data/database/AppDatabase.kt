@@ -8,7 +8,7 @@ import com.example.musictheory.trainingtest.data.model.MusicTestEntity
 
 @Database(
     entities = [Result::class, MusicTestEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(ResultConverter::class)

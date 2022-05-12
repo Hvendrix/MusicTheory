@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.musictheory.R
 import com.example.musictheory.databinding.FragmentTrainingTestBodyWithStaveBinding
 import com.example.musictheory.trainingtest.presentation.ui.Views.IntNoteImage
@@ -16,6 +18,8 @@ import com.example.musictheory.trainingtest.presentation.ui.list.viewholder.OnIt
 import com.example.musictheory.trainingtest.presentation.ui.viewmodel.TrainingTestViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -38,24 +42,34 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
 //        adapter.updateData(listOf("1", "2"))
         binding.signList.adapter = adapter
 
-        lifecycleScope.launchWhenResumed {
-            trainingTestViewModel.answersList
-                .collect {
-                    adapter.updateData(it)
+//        lifecycleScope.launchWhenResumed {
+//            trainingTestViewModel.answersList
+//                .collect {
+//                    adapter.updateData(it)
+//                }
+//        }
+
+        lifecycleScope.launch{
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
+                launch {
+                    trainingTestViewModel.answersList
+                        .collect {
+                            adapter.updateData(it)
+                        }
                 }
+                launch {
+                    trainingTestViewModel.displayedElements.collect{
+                        binding.signsOnStave.removeAllViews()
+                        it.forEach { el ->
+                            createSignView(binding, el.lineNumVertical)
+                        }
+                        binding.signsOnStave.requestLayout()
+                    }
+                }
+
+            }
         }
 
-        createSignView(binding, 1f)
-        createSignView(binding, 1.5f)
-        createSignView(binding, 2f)
-        createSignView(binding, 2.5f)
-        createSignView(binding, 3f)
-        createSignView(binding, 3.5f)
-        createSignView(binding, 4f)
-        createSignView(binding, 4.5f)
-        createSignView(binding, 5f)
-        createSignView(binding, 5.5f)
-        binding.signsOnStave.requestLayout()
 
         return binding.root
     }
@@ -101,9 +115,12 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
 
     private fun createSignView(
         binding: FragmentTrainingTestBodyWithStaveBinding,
-        numLine: Float = 1f,
+        numLine: Float = 0f,
         selectedImg: Int = R.drawable.ic_int_note,
     ){
+        if(numLine==0f){
+            return
+        }
         val signView = IntNoteImage(this.requireContext())
         signView.id = View.generateViewId()
         signView.setImageResource(selectedImg)

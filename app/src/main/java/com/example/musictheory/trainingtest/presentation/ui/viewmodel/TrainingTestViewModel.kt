@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.musictheory.core.data.Repository
 import com.example.musictheory.home.presentation.model.Id
 import com.example.musictheory.model.Result
+import com.example.musictheory.trainingtest.data.model.DisplayedElement
 import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.example.musictheory.trainingtest.data.model.MusicTestEntity
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
@@ -39,7 +40,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     val currentQuestionOid: StateFlow<String> = _currentQuestionOid.asStateFlow()
 
     private val _serverResponseCollectionList = MutableStateFlow<List<MusicTest>>(
-        listOf(MusicTest(Id(""), "", listOf(), listOf(), listOf(), ""))
+        listOf(MusicTest(Id(""), "", listOf(), listOf(), listOf(), listOf(), ""))
     )
 
 //    val serverResponseCollectionList:
@@ -47,10 +48,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 //            = _serverResponseCollectionList.asStateFlow()
 
     private val _serverResponseCollection = MutableStateFlow<MusicTest>(
-        MusicTest(Id(""), "", listOf(), listOf(), listOf(), "")
+        MusicTest(Id(""), "", listOf(), listOf(), listOf(), listOf(), "")
     )
     val serverResponseCollection:
-        StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
+            StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
 
     private val _questionString = MutableStateFlow("Вопрос")
     val questionString: StateFlow<String> = _questionString.asStateFlow()
@@ -60,8 +61,12 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     )
     val answersList: StateFlow<List<String>> = _answersList.asStateFlow()
 
-    private val _displayedElements = MutableStateFlow("none")
-    val displayedElements: StateFlow<String> = _displayedElements.asStateFlow()
+    private val _uiType = MutableStateFlow("none")
+    val uiType: StateFlow<String> = _uiType.asStateFlow()
+
+
+    private val _displayedElements: MutableStateFlow<List<DisplayedElement>> = MutableStateFlow(listOf())
+    val displayedElements: StateFlow<List<DisplayedElement>> = _displayedElements.asStateFlow()
 
     private val _goNextEvent = MutableStateFlow<Boolean>(false)
     val goNextEvent: StateFlow<Boolean> = _goNextEvent.asStateFlow()
@@ -79,7 +84,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         mutableListOf()
     )
     val currentMistakeList:
-        StateFlow<MutableList<List<String>>> = _currentMistakeList.asStateFlow()
+            StateFlow<MutableList<List<String>>> = _currentMistakeList.asStateFlow()
 
     /**
      * Получаем данные через интерактор
@@ -92,7 +97,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     suspend fun getTests(): ServerResponseMusicTest {
         _currentQuestionOid.value = "1"
 //        return trainingTestInteractor.getTests()
-        return trainingTestInteractor.getLocalTests()
+        return trainingTestInteractor.getLocalTests2()
     }
 
     suspend fun postTest() {
@@ -114,13 +119,52 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _answersList.value = _serverResponseCollection
             .value.answerArray[_currentQuestionNum.value].shuffled()
 
+
+        _uiType.value = _serverResponseCollection
+            .value.uiType[_currentQuestionNum.value]
+
+
         _questionString.value = _serverResponseCollection
             .value.questionArray[_currentQuestionNum.value]
 
+
+        _displayedElements.value = defineDisplayedElements(_serverResponseCollection
+            .value.displayedElements[_currentQuestionNum.value])
+
         _currentMistakeList.value = mutableListOf()
+
+        when(_uiType.value){
+            "stave random pick" ->  randomPick()
+        }
+
+
+
+
 
 //        _answersList.value = serverResponse.data.collection[0].answerArray[0]
 //        _questionString.emit(serverResponse.data.collection[0].questionArray[0])
+    }
+
+    fun randomPick(){
+        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+        _displayedElements.value = defineDisplayedElements(listOf(_currentRightAnswer.value))
+    }
+
+    fun defineDisplayedElements(noteList: List<String>): List<DisplayedElement>{
+        var result = mutableListOf<DisplayedElement>()
+        noteList.forEach {
+            result.add(when(it){
+                "ми" -> DisplayedElement(1f)
+                "фа" -> DisplayedElement(1.5f)
+                "соль" -> DisplayedElement(2f)
+                "ля" -> DisplayedElement(2.5f)
+                "си" -> DisplayedElement(3f)
+                "до2" -> DisplayedElement(3.5f)
+                "ре2" -> DisplayedElement(4f)
+                else -> DisplayedElement()
+            })
+        }
+        return result
     }
 
     fun goNext() {
@@ -132,6 +176,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
                     sectionsId = "0",
                     questionArray = _serverResponseCollection.value.questionArray,
                     answerArray = _serverResponseCollection.value.answerArray,
+                    uiType = _serverResponseCollection.value.uiType,
                     displayedElements = _serverResponseCollection.value.displayedElements
                 )
             )
@@ -166,7 +211,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         }
     }
 
-    fun goResult(id: Long) {
+    private fun goResult(id: Long) {
         _goResultEvent.value = id
     }
 
