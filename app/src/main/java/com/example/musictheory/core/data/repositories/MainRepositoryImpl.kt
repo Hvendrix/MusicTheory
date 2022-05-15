@@ -1,15 +1,10 @@
 package com.example.musictheory.core.data.repositories
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.trainingtest.data.model.PostResult
-import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
 
 /**
@@ -54,4 +49,14 @@ class MainRepositoryImpl(
     override suspend fun postLogin(
         postLogin: PostLogin
     ): Call<ResponseLogin> = apiHelper.postLogin(postLogin)
+
+
+
+    override suspend fun postSignUpFlask(
+        postSignUpFlask: PostSignUpFlask
+    ): Call<ResponseToken> = apiHelper.postSignUpFlask(postSignUpFlask)
+
+    override suspend fun postLoginFlask(postLoginFlask: PostLoginFlask): Call<ResponseToken> = apiHelper.postLoginFlask(postLoginFlask)
+    override suspend fun getUserFlask(token: String): Call<ResponseUser> = apiHelper.getUserFlask(token)
+
 }

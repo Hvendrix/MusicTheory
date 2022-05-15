@@ -1,5 +1,9 @@
 package com.example.musictheory.account.presenter.fragments
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.accounts.AccountManagerCallback
+import android.accounts.AccountManagerFuture
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -58,6 +62,8 @@ class StudentLoginFragment : Fragment() {
         }
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,15 +72,39 @@ class StudentLoginFragment : Fragment() {
         _binding = FragmentStudentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
 
+
+        val am = AccountManager.get(this.requireContext())
+        val accounts: Array<out Account> = am.getAccountsByType("com.google")
+//        try{
+//            val myAccount_ = accounts[0]
+//            val options = Bundle()
+//
+//            am.getAuthToken(
+//                myAccount_,                     // Account retrieved using getAccountsByType()
+//                "Manage your tasks",            // Auth scope
+//                options,                        // Authenticator-specific options
+//                this.activity,                           // Your activity
+//                OnTokenAcquired(),              // Callback called when a token is successfully acquired
+//                Handler(OnError())              // Callback called if an error occurs
+//            )
+//        } catch (e: Exception){
+//            Timber.i(e)
+//        }
+
+
+
+
         val gso = GoogleSignInOptions
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client_id))
             .requestEmail()
             .build()
         val account = GoogleSignIn.getLastSignedInAccount(context)
-        if (account != null && account.idToken != null) {
-            postLoginToServer(account.idToken, "")
-        }
+//        if (account != null && account.idToken != null) {
+//            postLoginToServer(account.idToken, "")
+//        }
+
+
 //        updateUI(account)
 
         mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
@@ -85,7 +115,11 @@ class StudentLoginFragment : Fragment() {
         registerButton = binding.registerButton
 
         enterButton.setOnClickListener {
-            postLoginToServer(
+//            postLoginToServer(
+//                binding.loginEt.text.toString().trim(),
+//                binding.passwordEt.text.toString()
+//            )
+            postLoginFlaskToServer(
                 binding.loginEt.text.toString().trim(),
                 binding.passwordEt.text.toString()
             )
@@ -102,8 +136,8 @@ class StudentLoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    personalAccountViewModel.email.collect {
-                        if (it != null && it.name.isNotEmpty() && it.role.isNotEmpty()) {
+                    personalAccountViewModel.user.collect {
+                        if (it != null && it.login.isNotEmpty() && it.role.isNotEmpty()) {
                             personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
 //                            if (activity is MainActivityCallback) {
 //                                (activity as MainActivityCallback).goAccount(it.name, it.role)
@@ -132,6 +166,28 @@ class StudentLoginFragment : Fragment() {
         return view
     }
 
+    private fun OnError(){
+
+    }
+
+    private class OnTokenAcquired : AccountManagerCallback<Bundle> {
+
+        override fun run(result: AccountManagerFuture<Bundle>) {
+            // Get the result of the operation from the AccountManagerFuture.
+            val bundle: Bundle = result.getResult()
+
+            // The token is a named value in the bundle. The name of the value
+            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
+            val token: String = bundle.getString(AccountManager.KEY_AUTHTOKEN)!!
+
+            val launch: Intent? = result.getResult().get(AccountManager.KEY_INTENT) as? Intent
+            if (launch != null) {
+//                startActivityForResult(launch, 0)
+            }
+
+        }
+    }
+
     private fun postLoginToServer(token: String, pass: String) {
         lifecycleScope.launch {
             val responseLogin = async {
@@ -152,6 +208,48 @@ class StudentLoginFragment : Fragment() {
         }
     }
 
+
+    private fun postLoginFlaskToServer(email: String, password: String) {
+        lifecycleScope.launch {
+            val responseLogin = async {
+                personalAccountViewModel.postLoginFlask(email, password)
+            }
+            val responseLoginAwait = responseLogin.await().body()
+
+            val responseUser = async {
+                personalAccountViewModel.getUserFlask(responseLoginAwait?.token?: "")
+            }
+            val responseUserAwait = responseUser.await().body()?.data
+            when {
+                responseUserAwait == null -> {
+                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+                }
+                responseUserAwait.login.isNotEmpty() -> {
+                    personalAccountViewModel.setEmail(responseUserAwait)
+                }
+                else -> {
+                    Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+                }
+            }
+//            when {
+//                responseLoginAwait == null -> {
+//                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+//                }
+//                responseLoginAwait.name.isNotEmpty() -> {
+//                    personalAccountViewModel.setEmail(responseLoginAwait)
+//                }
+//                responseLoginAwait.result == "OK" -> {
+//                    Toast.makeText(context, "ТОКЕН" + responseLoginAwait.token, Toast.LENGTH_SHORT).show()
+//
+//                }
+//                else -> {
+//                    Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+        }
+    }
+
+
     private fun updateUI(account: GoogleSignInAccount?) {
 //        if(account == null){
 //            Toast.makeText(context, "account is null", Toast.LENGTH_SHORT).show()
@@ -169,10 +267,10 @@ class StudentLoginFragment : Fragment() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             if (account != null && account.idToken != null) {
-                postLoginToServer(
-                    account.idToken,
-                    ""
-                )
+//                postLoginToServer(
+//                    account.idToken,
+//                    ""
+//                )
             }
 
             updateUI(account)

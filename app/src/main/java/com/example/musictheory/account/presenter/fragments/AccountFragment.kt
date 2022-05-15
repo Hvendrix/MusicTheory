@@ -43,8 +43,8 @@ class AccountFragment : Fragment() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
 
-        binding.textViewAccountName.text = personalAccountViewModel.email.value?.name
-        when (personalAccountViewModel.email.value?.role) {
+        binding.textViewAccountName.text = personalAccountViewModel.user.value?.login
+        when (personalAccountViewModel.user.value?.role) {
             null -> {
                 binding.buttonAddTestAccount.visibility = View.GONE
             }

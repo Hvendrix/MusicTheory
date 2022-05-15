@@ -1,10 +1,6 @@
 package com.example.musictheory.core.data.api
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.home.presentation.model.PostSection
@@ -52,5 +48,17 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
 
     override suspend fun postLogin(postLogin: PostLogin): Call<ResponseLogin> {
         return apiService.postLogin(postLogin)
+    }
+
+    override suspend fun postSignUpFlask(postSignUpFlask: PostSignUpFlask): Call<ResponseToken> {
+        return apiService.postSignUpFlask(postSignUpFlask)
+    }
+
+    override suspend fun postLoginFlask(postLoginFlask: PostLoginFlask): Call<ResponseToken> {
+        return apiService.postLoginFlask(postLoginFlask)
+    }
+
+    override suspend fun getUserFlask(token: String): Call<ResponseUser> {
+        return apiService.getUserFlask("Bearer " + token)
     }
 }

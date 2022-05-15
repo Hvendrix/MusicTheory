@@ -1,21 +1,13 @@
 package com.example.musictheory.core.data.api
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.home.presentation.model.SectionsCollection
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * @author Владислав Хвесюк 02.11.2021
@@ -56,4 +48,16 @@ interface MusicEducationApiService {
 
     @POST("login/")
     fun postLogin(@Body postLogin: PostLogin): Call<ResponseLogin>
+
+
+    @POST("signup")
+    fun postSignUpFlask(@Body postSignUpFlask: PostSignUpFlask): Call<ResponseToken>
+
+    @POST("login")
+    fun postLoginFlask(@Body postLoginFlask: PostLoginFlask): Call<ResponseToken>
+
+    @GET("user")
+    fun getUserFlask(
+        @Header("Authorization") token: String
+    ): Call<ResponseUser>
 }

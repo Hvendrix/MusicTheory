@@ -83,12 +83,12 @@ class StudentRegistrationFragment : Fragment() {
         val account = GoogleSignIn.getLastSignedInAccount(context)
 
         if (account != null && account.idToken != null && account.email != null) {
-            postSignUpToServer(
-                account.idToken,
-                account.email,
-                binding.checkboxTeacher.isChecked,
-                ""
-            )
+//            postSignUpToServer(
+//                account.idToken,
+//                account.email,
+//                binding.checkboxTeacher.isChecked,
+//                ""
+//            )
         }
 //        updateUI(account)
 
@@ -101,8 +101,13 @@ class StudentRegistrationFragment : Fragment() {
         }
 
         binding.registerButton.setOnClickListener {
-            postSignUpToServer(
-                binding.loginEt.text.toString().trim(),
+//            postSignUpToServer(
+//                binding.loginEt.text.toString().trim(),
+//                binding.loginEt.text.toString().trim(),
+//                binding.checkboxTeacher.isChecked,
+//                binding.passwordEt.text.toString()
+//            )
+            postSignUpFlaskToServer(
                 binding.loginEt.text.toString().trim(),
                 binding.checkboxTeacher.isChecked,
                 binding.passwordEt.text.toString()
@@ -112,8 +117,8 @@ class StudentRegistrationFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    personalAccountViewModel.email.collect {
-                        if (it != null && it.name.isNotEmpty() && it.role.isNotEmpty()) {
+                    personalAccountViewModel.user.collect {
+                        if (it != null && it.login.isNotEmpty() && it.role.isNotEmpty()) {
                             personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
 //                            if (activity is MainActivityCallback) {
 //                                (activity as MainActivityCallback).goAccount(it.name, it.role)
@@ -187,6 +192,66 @@ class StudentRegistrationFragment : Fragment() {
         }
     }
 
+
+    private fun postSignUpFlaskToServer(email: String, teacher: Boolean, pass: String) {
+        Timber.v("t1 teacher " + teacher)
+        lifecycleScope.launch {
+            val signUpResponse = async {
+                personalAccountViewModel.postSignUpFlask(email, teacher, pass)
+            }
+//            x.await().body()?.let { it1 -> personalAccountViewModel.setEmail(it1) }
+            val signUpResponseAwait = signUpResponse.await().body()
+            val responseUser = async {
+//                if(signUpResponseAwait!=null)
+                personalAccountViewModel.getUserFlask(signUpResponseAwait?.token ?: "")
+            }
+            val responseUserAwait = responseUser.await().body()?.data
+            when {
+                responseUserAwait == null -> {
+                    Toast.makeText(
+                        context,
+                        "Пользователь уже существует",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+                }
+                !responseUserAwait.login.isNullOrEmpty() -> {
+                    personalAccountViewModel.setEmail(responseUserAwait)
+                }
+                else -> {
+                    Toast.makeText(
+                        context,
+                        "${signUpResponseAwait?.result}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+//                    val responseLogin = async {
+//                        personalAccountViewModel.postLogin(token, pass)
+//                    }
+//                    val responseLoginAwait = responseLogin.await().body()
+//                    when {
+//                        responseLoginAwait == null -> {
+//                            personalAccountViewModel.setRegister(
+//                                PersonalAccountFragments.REGISTRATION
+//                            )
+//                        }
+//                        responseLoginAwait.name.isNotEmpty() -> {
+//                            personalAccountViewModel
+//                                .setEmail(responseLoginAwait)
+//                        }
+//                        else -> {
+//                            Toast.makeText(
+//                                context,
+//                                "Что-то пошло не так",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+                }
+            }
+        }
+    }
+
     private fun updateUI(account: GoogleSignInAccount?) {
         if (account == null) {
 //            Toast.makeText(context, "account is null", Toast.LENGTH_SHORT).show()
@@ -206,12 +271,12 @@ class StudentRegistrationFragment : Fragment() {
             val idToken = account.idToken
 
             if (account != null && account.idToken != null && account.email != null) {
-                postSignUpToServer(
-                    account.idToken,
-                    account.email,
-                    binding.checkboxTeacher.isChecked,
-                    ""
-                )
+//                postSignUpToServer(
+//                    account.idToken,
+//                    account.email,
+//                    binding.checkboxTeacher.isChecked,
+//                    ""
+//                )
             }
 
             // Signed in successfully, show authenticated UI.

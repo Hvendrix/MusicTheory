@@ -19,7 +19,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_URL', "\"https://music--education.herokuapp.com/api/\""
+//        buildConfigField 'String', 'BASE_URL', "\"https://music--education.herokuapp.com/api/\""
+        buildConfigField 'String', 'BASE_URL', "\"http://51.250.106.235:8000/api/\""
     }
 
     /**

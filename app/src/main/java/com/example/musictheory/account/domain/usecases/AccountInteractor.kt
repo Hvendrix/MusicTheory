@@ -1,10 +1,6 @@
 package com.example.musictheory.account.domain.usecases
 
-import com.example.musictheory.account.data.model.MusicTestWithoutId
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
@@ -44,6 +40,32 @@ class AccountInteractor(
             .execute()
     }
 
+
+    suspend fun postSignUpFlask(
+        email: String,
+        teacher: Boolean,
+        password: String,
+        firstName: String = "first_name",
+        lastName: String = "last_name",
+    ) = withContext(
+        Dispatchers.IO
+    ) {
+        var role = "student"
+        if (teacher) {
+            role = "teacher"
+        }
+        mainRepository.postSignUpFlask(
+            PostSignUpFlask(
+                email,
+                password,
+                firstName,
+                lastName,
+                role
+            )
+        )
+            .execute()
+    }
+
     suspend fun postLogin(token: String, pass: String) = withContext(Dispatchers.IO) {
         mainRepository.postLogin(
             PostLogin(
@@ -51,6 +73,22 @@ class AccountInteractor(
                 pass
             )
         )
+            .execute()
+    }
+
+    suspend fun postLoginFlask(email: String, password: String) = withContext(Dispatchers.IO) {
+        mainRepository.postLoginFlask(
+            PostLoginFlask(
+                email,
+                password
+            )
+        )
+            .execute()
+    }
+
+
+    suspend fun getUserFlask(token: String) = withContext(Dispatchers.IO) {
+        mainRepository.getUserFlask(token)
             .execute()
     }
     suspend fun postTest() = withContext(Dispatchers.IO) {
