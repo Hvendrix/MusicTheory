@@ -19,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.musictheory.R
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
+import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentStudentRegistrationBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -194,36 +195,38 @@ class StudentRegistrationFragment : Fragment() {
 
 
     private fun postSignUpFlaskToServer(email: String, teacher: Boolean, pass: String) {
-        Timber.v("t1 teacher " + teacher)
         lifecycleScope.launch {
             val signUpResponse = async {
                 personalAccountViewModel.postSignUpFlask(email, teacher, pass)
             }
 //            x.await().body()?.let { it1 -> personalAccountViewModel.setEmail(it1) }
             val signUpResponseAwait = signUpResponse.await().body()
-            val responseUser = async {
+            if (activity is MainActivityCallback) {
+                (activity as MainActivityCallback).setToken(signUpResponseAwait ?.token?: "")
+                val responseUser = async {
 //                if(signUpResponseAwait!=null)
-                personalAccountViewModel.getUserFlask(signUpResponseAwait?.token ?: "")
-            }
-            val responseUserAwait = responseUser.await().body()?.data
-            when {
-                responseUserAwait == null -> {
-                    Toast.makeText(
-                        context,
-                        "Пользователь уже существует",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+//                personalAccountViewModel.getUserFlask("Bearer " + signUpResponseAwait?.token ?: "")
+                    personalAccountViewModel.getUserFlask( (activity as MainActivityCallback).getToken())
                 }
-                !responseUserAwait.login.isNullOrEmpty() -> {
-                    personalAccountViewModel.setEmail(responseUserAwait)
-                }
-                else -> {
-                    Toast.makeText(
-                        context,
-                        "${signUpResponseAwait?.result}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                val responseUserAwait = responseUser.await().body()?.data
+                when {
+                    responseUserAwait == null -> {
+                        Toast.makeText(
+                            context,
+                            "Пользователь уже существует",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+                    }
+                    !responseUserAwait.login.isNullOrEmpty() -> {
+                        personalAccountViewModel.setEmail(responseUserAwait)
+                    }
+                    else -> {
+                        Toast.makeText(
+                            context,
+                            "${signUpResponseAwait?.result}",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
 //                    val responseLogin = async {
 //                        personalAccountViewModel.postLogin(token, pass)
@@ -247,8 +250,11 @@ class StudentRegistrationFragment : Fragment() {
 //                            ).show()
 //                        }
 //                    }
+                    }
                 }
             }
+
+
         }
     }
 

@@ -5,6 +5,7 @@ import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.home.presentation.model.SectionsCollection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -18,20 +19,20 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
         return apiService.getCollectionByName("tests")
     }
 
-    override suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest> {
-        return apiService.getMusicTest("tests")
+    override suspend fun getMusicTest(token: String): Call<ServerResponseMusicTest> {
+        return apiService.getMusicTest(token)
     }
 
-    override suspend fun getCategories(): Call<ServerResponseMusicTest> {
-        return apiService.getCategories()
+    override suspend fun getCategories(token: String): Call<ServerResponseMusicTest> {
+        return apiService.getCategories(token)
     }
 
     override suspend fun postSection(serverData: PostSection): Call<SectionsCollection> {
         return apiService.postSection(serverData)
     }
 
-    override suspend fun postTest(postMusicTest: PostMusicTest): Call<PostMusicTest> {
-        return apiService.postTest(postMusicTest)
+    override suspend fun postTest(token: String, postMusicTest: MusicTestWithoutId): Call<AnswerResult> {
+        return apiService.postTest(token, postMusicTest)
     }
 
     override suspend fun postResult(postResult: PostResult): Call<PostResult> {
@@ -59,6 +60,6 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
     }
 
     override suspend fun getUserFlask(token: String): Call<ResponseUser> {
-        return apiService.getUserFlask("Bearer " + token)
+        return apiService.getUserFlask(token)
     }
 }

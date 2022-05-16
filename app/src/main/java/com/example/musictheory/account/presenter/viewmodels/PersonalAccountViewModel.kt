@@ -1,17 +1,21 @@
 package com.example.musictheory.account.presenter.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.musictheory.account.data.model.ResponseLogin
 import com.example.musictheory.account.data.model.ResponseToken
 import com.example.musictheory.account.data.model.ResponseUser
 import com.example.musictheory.account.data.model.UserFlask
 import com.example.musictheory.account.domain.usecases.AccountInteractor
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
+import com.example.musictheory.trainingtest.data.model.Question
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 @HiltViewModel
@@ -28,6 +32,9 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         _goRegister.value = fragment
     }
 
+//    private val _token = MutableStateFlow<String>("")
+//    val token: StateFlow<String> = _token.asStateFlow()
+
     private val _serverResponse = MutableStateFlow<ResponseLogin?>(null)
     val serverResponse: StateFlow<ResponseLogin?> = _serverResponse.asStateFlow()
 
@@ -36,11 +43,13 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
 
     private val _user = MutableStateFlow<UserFlask?>(null)
     val user: StateFlow<UserFlask?> = _user.asStateFlow()
+
+
     suspend fun postSignUp(
         token: String,
         name: String,
         teacher: Boolean,
-        pass: String
+        pass: String,
     ): Response<ResponseLogin> {
         return accountInteractor.postSignUp(token, name, teacher, pass)
     }
@@ -53,6 +62,7 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
     ): Response<ResponseToken> {
         return accountInteractor.postSignUpFlask(email, teacher, pass)
     }
+
     suspend fun postLogin(token: String, pass: String): Response<ResponseLogin> {
         return accountInteractor.postLogin(token, pass)
     }
@@ -68,21 +78,46 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
     fun setEmail(email: ResponseLogin) {
 //        _user.value = email
     }
+
     fun setEmail(email: UserFlask) {
         _user.value = email
     }
+
+//    fun setToken(token: String){
+//        _token.value = "Bearer $token"
+//    }
 
     fun setServerResponse(responseLogin: ResponseLogin) {
         _serverResponse.value = responseLogin
     }
 
+
+    suspend fun loginIn(token: String) {
+        viewModelScope.launch {
+            val responseUser = async {
+                getUserFlask(token)
+            }
+            val responseUserAwait = responseUser.await().body()?.data
+            when {
+                responseUserAwait == null -> {
+                    setRegister(PersonalAccountFragments.REGISTRATION)
+                }
+                responseUserAwait.login.isNotEmpty() -> {
+                    setEmail(responseUserAwait)
+                }
+            }
+        }
+    }
+
+
     suspend fun postTestToServer(
-        questionArray: List<String>,
-        answerArray: List<List<String>>,
-        uiType: List<String>,
-        testName: String
+        token: String,
+        testName: String,
+        sectionId: List<String>,
+        questionArray: List<Question>,
+        teacherId: String,
     ) {
-        val x = accountInteractor.postTest(questionArray, answerArray, uiType, testName)
+        accountInteractor.postTest(token, testName, sectionId, questionArray, teacherId)
     }
 
     suspend fun postDeleteTest() {

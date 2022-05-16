@@ -14,21 +14,21 @@ class HomeInteractor(
     private val mainRepository: MainRepository
 ): MainInteractor{
 
-    suspend fun getCategories(): ServerResponseMusicTest = withContext(Dispatchers.IO){
-        return@withContext mainRepository.getCategories()
+    suspend fun getCategories(token: String): ServerResponseMusicTest = withContext(Dispatchers.IO){
+        return@withContext mainRepository.getCategories(token)
             .execute().body() ?: error("not found")
     }
 
-    suspend fun getCategoriesLocal(): ServerResponseMusicTest = withContext(Dispatchers.IO){
-        return@withContext ServerResponseMusicTest(ServerDataMusicTest("tests", listOf(MusicTest(
-            Id("100"),
-            "100",
-            listOf("какая нота"),
-            listOf(listOf("фа", "до", "соль")),
-            listOf("stave"),
-            listOf(listOf("фа")),
-            "знаки"
-        ))))
-    }
+//    suspend fun getCategoriesLocal(): ServerResponseMusicTest = withContext(Dispatchers.IO){
+//        return@withContext ServerResponseMusicTest(ServerDataMusicTest("tests", listOf(MusicTest(
+//            Id("100"),
+//            "100",
+//            listOf("какая нота"),
+//            listOf(listOf("фа", "до", "соль")),
+//            listOf("stave"),
+//            listOf(listOf("фа")),
+//            "знаки"
+//        ))))
+//    }
 
 }

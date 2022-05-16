@@ -48,7 +48,17 @@ class HomeBodyFragment : Fragment() {
             }
         )
         setUpRecyclerView(categoriesAdapter)
-        homeViewModel.getCategories()
+        var token = ""
+        if (activity is MainActivityCallback) {
+            token = (activity as MainActivityCallback).getToken()
+        }
+        if(token!="")
+        homeViewModel.getCategories(token)
+        else {
+//            if(activity is MainActivityCallback){
+//                (activity as MainActivityCallback).goAccount("","")
+//            }
+        }
 
         homeViewModel.categories.observe(
             viewLifecycleOwner,

@@ -4,6 +4,7 @@ import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import retrofit2.Call
 
@@ -20,19 +21,20 @@ class MainRepositoryImpl(
     ) = apiHelper.getCollectionByName(collectionName)
 
     override suspend fun getMusicTest(
-        collectionName: String
-    ) = apiHelper.getMusicTest(collectionName)
+        token: String
+    ) = apiHelper.getMusicTest(token)
 
-    override suspend fun getCategories()
-     = apiHelper.getCategories()
+    override suspend fun getCategories(token: String)
+     = apiHelper.getCategories(token)
 
     override suspend fun postSection(
         serverData: PostSection
     ) = apiHelper.postSection(serverData)
 
     override suspend fun postTest(
-        postMusicTest: PostMusicTest
-    ): Call<PostMusicTest> = apiHelper.postTest(postMusicTest)
+        token: String,
+        postMusicTest: MusicTestWithoutId
+    ): Call<AnswerResult> = apiHelper.postTest(token, postMusicTest)
 
     override suspend fun postResult(
         postResult: PostResult

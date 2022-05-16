@@ -17,7 +17,7 @@ class AccountViewModel @Inject constructor() : ViewModel() {
         uiType: List<String>,
         testName: String
     ) {
-        val x = accountInteractor.postTest(questionArray, answerArray, uiType, testName)
+//        val x = accountInteractor.postTest(questionArray, answerArray, uiType, testName)
 //        Timber.i("t10  value ${x.isSuccessful}  ${x.body()}   ${x.errorBody() } ${x.message()}  ${x.code()}")
     }
 }

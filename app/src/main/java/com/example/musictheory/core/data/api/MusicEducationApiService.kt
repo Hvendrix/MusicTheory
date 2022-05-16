@@ -4,6 +4,7 @@ import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.home.presentation.model.SectionsCollection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -19,23 +20,31 @@ interface MusicEducationApiService {
         @Query("collection_name") collectionName: String
     ): Call<ServerResponse>
 
-    @GET("get_data")
-    fun getMusicTest(
-        @Query("collection_name")
-        collectionName: String
-    ): Call<ServerResponseMusicTest>
+//    @GET("get_data")
+//    fun getMusicTest(
+//        @Query("collection_name")
+//        collectionName: String
+//    ): Call<ServerResponseMusicTest>
+@GET("test")
+fun getMusicTest(
+    @Header("Authorization") token: String
+): Call<ServerResponseMusicTest>
 
-    @GET("get_data")
+//    @GET("get_data")
+//    fun getCategories(
+//        @Query("collection_name")
+//        collectionName: String = "tests"
+//    ): Call<ServerResponseMusicTest>
+    @GET("test")
     fun getCategories(
-        @Query("collection_name")
-        collectionName: String = "tests"
+    @Header("Authorization") token: String
     ): Call<ServerResponseMusicTest>
 
     @POST("put_data/")
     fun postSection(@Body serverData: PostSection): Call<SectionsCollection>
 
-    @POST("put_data/")
-    fun postTest(@Body postMusicTest: PostMusicTest): Call<PostMusicTest>
+    @POST("test")
+    fun postTest(@Header("Authorization") token: String, @Body postMusicTest: MusicTestWithoutId): Call<AnswerResult>
 
     @POST("put_data/")
     fun postResult(@Body postResult: PostResult): Call<PostResult>

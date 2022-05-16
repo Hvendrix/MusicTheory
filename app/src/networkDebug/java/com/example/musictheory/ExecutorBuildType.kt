@@ -36,4 +36,11 @@ object ExecutorBuildType {
             .addInterceptor(loggingInterceptor)
             .build()
     }
+
+    fun mockUserDataFieldLogin(): String{
+        return "test@test.ru"
+    }
+    fun mockUserDataFieldPass(): String{
+        return "test"
+    }
 }

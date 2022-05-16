@@ -9,16 +9,16 @@ import com.google.gson.annotations.SerializedName
 data class MusicTest(
     @SerializedName("_id")
     val id: Id,
-    @SerializedName("sections_id")
-    val sectionsId: String,
+    @SerializedName("name")
+    val testName: String,
     @SerializedName("question_array")
-    val questionArray: List<String>,
-    @SerializedName("answer_array")
-    val answerArray: List<List<String>>,
-    @SerializedName("ui_type")
-    val uiType: List<String>,
-    @SerializedName("displayed_elements")
-    val displayedElements: List<List<String>>,
-    @SerializedName("test_name")
-    val testName: String
+    val questionArray: List<Question>,
+    @SerializedName("section")
+    val sectionsId: List<String>,
+    @SerializedName("teacher_id")
+    val teacherId: String,
+    @SerializedName("test_id")
+    val test_id: String
+
+
 )

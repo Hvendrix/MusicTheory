@@ -4,6 +4,7 @@ import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.home.presentation.model.PostSection
 import com.example.musictheory.home.presentation.model.SectionsCollection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -17,15 +18,16 @@ interface MainRepository {
 
     suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest>
 
-    suspend fun getCategories(): Call<ServerResponseMusicTest>
+    suspend fun getCategories(token: String): Call<ServerResponseMusicTest>
 
     suspend fun postSection(
         serverData: PostSection
     ): Call<SectionsCollection>
 
     suspend fun postTest(
-        postMusicTest: PostMusicTest
-    ): Call<PostMusicTest>
+        token: String,
+        postMusicTest: MusicTestWithoutId
+    ): Call<AnswerResult>
 
     suspend fun postResult(
         postResult: PostResult

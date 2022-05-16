@@ -82,7 +82,13 @@ class TrainingTestFragment : Fragment() {
                 launch {
                     trainingTestViewModel.currentQuestionOid.collect {
                         lifecycleScope.launch {
-                            val tests = async { trainingTestViewModel.getTests() }
+                            val tests = async {
+                                var token = ""
+                                if (activity is MainActivityCallback) {
+                                    token = (activity as MainActivityCallback).getToken()
+                                }
+                                trainingTestViewModel.getTests(token)
+                            }
                             trainingTestViewModel.getData(tests.await())
                         }
 //                        if (it.isNotEmpty()) {
@@ -95,7 +101,7 @@ class TrainingTestFragment : Fragment() {
                 }
                 launch {
                     trainingTestViewModel.uiType.collect {
-                        changeUitype()
+                        changeUiType()
                     }
                 }
             }
@@ -106,7 +112,7 @@ class TrainingTestFragment : Fragment() {
         return binding.root
     }
 
-    fun changeUitype(){
+    fun changeUiType(){
             var nextBodyFragment: Fragment? = null
             when (trainingTestViewModel.uiType.value) {
                 "none" -> {

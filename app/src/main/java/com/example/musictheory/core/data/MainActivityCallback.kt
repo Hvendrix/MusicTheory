@@ -11,4 +11,6 @@ interface MainActivityCallback {
     fun goResultFragment(id: Long)
     fun goAddTestFragment()
     fun goAccount(email: String, role: String)
+    fun setToken(token: String)
+    fun getToken(): String
 }

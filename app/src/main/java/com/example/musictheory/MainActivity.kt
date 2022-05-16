@@ -3,6 +3,7 @@ package com.example.musictheory
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
@@ -40,6 +41,9 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
      */
 //    @Inject
 //    lateinit var dataStoreMusicEducation: DataStoreMusicEducation
+
+    private val viewModel: MainActivityViewModel
+            by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,6 +138,14 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
 // //            bundle
 //        )
         navController.navigate(R.id.accountFragment)
+    }
+
+    override fun setToken(token: String) {
+        viewModel.setToken(token)
+    }
+
+    override fun getToken(): String {
+        return viewModel.token.value
     }
 
     override fun onDestroy() {

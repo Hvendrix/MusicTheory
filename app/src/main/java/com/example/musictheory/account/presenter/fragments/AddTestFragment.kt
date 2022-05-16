@@ -9,7 +9,9 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.musictheory.R
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
+import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.AddTestFragmentBinding
+import com.example.musictheory.trainingtest.data.model.Question
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,19 +35,42 @@ class AddTestFragment : Fragment() {
 
         binding.buttonAddTestAccount.setOnClickListener {
             lifecycleScope.launch {
-                Timber.v("t10 start ")
                 val str = binding.editTextIncorrectAnswersAccount.text.toString()
                 var strArray = str.split(", ")
                 var answerArray = ArrayList<ArrayList<String>>()
                 var tmpArray = arrayListOf(binding.editTextAnswerAccount.text.toString())
                 tmpArray.addAll(strArray)
                 answerArray.add(tmpArray)
-                personalAccountViewModel.postTestToServer(
-                    listOf(binding.editTextQuestionAccount.text.toString()),
-                    answerArray,
-                    listOf("none"),
-                    binding.editTextTestNameAccount.text.toString()
-                )
+
+                var token = ""
+                if (activity is MainActivityCallback) {
+                    token = (activity as MainActivityCallback).getToken()
+                }
+                if(token!="") {
+//                    personalAccountViewModel.postTestToServer(
+//                        listOf(binding.editTextQuestionAccount.text.toString()),
+//                        answerArray,
+//                        listOf("none"),
+//                        binding.editTextTestNameAccount.text.toString()
+//                    )
+                    personalAccountViewModel.postTestToServer(
+                        token,
+                        "определить ноту",
+                        listOf("1"),
+                        listOf(Question(
+                            listOf("ми", "фа", "соль", "ля", "си", "до", "ре"),
+                            "",
+                            listOf(),
+                            mapOf(
+                                "count" to 1,
+                                "notes" to "from_answers"
+                            ),
+                            "какая это нота",
+                            "stave"
+                        )),
+                       "2"
+                    )
+                }
             }
         }
 

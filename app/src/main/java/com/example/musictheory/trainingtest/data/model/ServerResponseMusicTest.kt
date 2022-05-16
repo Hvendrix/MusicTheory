@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
  */
 data class ServerResponseMusicTest(
     @SerializedName("data")
-    val data: ServerDataMusicTest
+    val data: List<MusicTest>
 )

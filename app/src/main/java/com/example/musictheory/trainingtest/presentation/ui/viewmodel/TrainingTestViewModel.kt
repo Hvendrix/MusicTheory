@@ -40,7 +40,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     val currentQuestionOid: StateFlow<String> = _currentQuestionOid.asStateFlow()
 
     private val _serverResponseCollectionList = MutableStateFlow<List<MusicTest>>(
-        listOf(MusicTest(Id(""), "", listOf(), listOf(), listOf(), listOf(), ""))
+        listOf(MusicTest(Id(""), "", listOf(),listOf() , "", ""))
     )
 
 //    val serverResponseCollectionList:
@@ -48,7 +48,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 //            = _serverResponseCollectionList.asStateFlow()
 
     private val _serverResponseCollection = MutableStateFlow<MusicTest>(
-        MusicTest(Id(""), "", listOf(), listOf(), listOf(), listOf(), "")
+        MusicTest(Id(""), "", listOf(),listOf() , "", "")
     )
     val serverResponseCollection:
             StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
@@ -67,6 +67,9 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     private val _displayedElements: MutableStateFlow<List<DisplayedElement>> = MutableStateFlow(listOf())
     val displayedElements: StateFlow<List<DisplayedElement>> = _displayedElements.asStateFlow()
+
+    private val _generationSeed: MutableStateFlow<Map<Any, Any>> = MutableStateFlow(mapOf())
+    val generationSeed: StateFlow<Map<Any, Any>> = _generationSeed.asStateFlow()
 
     private val _goNextEvent = MutableStateFlow<Boolean>(false)
     val goNextEvent: StateFlow<Boolean> = _goNextEvent.asStateFlow()
@@ -94,10 +97,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _currentQuestionOid.value = oid
     }
 
-    suspend fun getTests(): ServerResponseMusicTest {
-        _currentQuestionOid.value = "1"
-//        return trainingTestInteractor.getTests()
-        return trainingTestInteractor.getLocalTests2()
+    suspend fun getTests(token: String): ServerResponseMusicTest {
+//        _currentQuestionOid.value = "1"
+        return trainingTestInteractor.getTests(token)
+//        return trainingTestInteractor.getLocalTests2()
     }
 
     suspend fun postTest() {
@@ -106,35 +109,42 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     fun getData(serverResponse: ServerResponseMusicTest) {
-        _serverResponseCollection.value = serverResponse.data.collection[0]
-        _serverResponseCollectionList.value = serverResponse.data.collection
+        _serverResponseCollection.value = serverResponse.data[0]
+        _serverResponseCollectionList.value = serverResponse.data
         _serverResponseCollectionList.value.forEach {
             if (it.id.oid == currentQuestionOid.value) {
                 _serverResponseCollection.value = it
             }
         }
         _currentRightAnswer.value = _serverResponseCollection
-            .value.answerArray[_currentQuestionNum.value][0]
+            .value.questionArray[_currentQuestionNum.value].answerArray[0]
 
         _answersList.value = _serverResponseCollection
-            .value.answerArray[_currentQuestionNum.value].shuffled()
+            .value.questionArray[_currentQuestionNum.value].answerArray.shuffled()
 
 
         _uiType.value = _serverResponseCollection
-            .value.uiType[_currentQuestionNum.value]
+            .value.questionArray[_currentQuestionNum.value].uiType
 
 
         _questionString.value = _serverResponseCollection
-            .value.questionArray[_currentQuestionNum.value]
+            .value.questionArray[_currentQuestionNum.value].questionText
+
+
+        _generationSeed.value = _serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].generationSeed
 
 
         _displayedElements.value = defineDisplayedElements(_serverResponseCollection
-            .value.displayedElements[_currentQuestionNum.value])
+            .value.questionArray[_currentQuestionNum.value].displayedElements)
 
         _currentMistakeList.value = mutableListOf()
 
-        when(_uiType.value){
-            "stave random pick" ->  randomPick()
+//        when(_uiType.value){
+//            "stave random pick" ->  randomPick()
+//        }
+        when(_generationSeed.value.get("notes")){
+            "from_answers" -> randomPick()
         }
 
 
@@ -147,13 +157,34 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     fun randomPick(){
         _currentRightAnswer.value = _answersList.value.shuffled()[0]
-        _displayedElements.value = defineDisplayedElements(listOf(_currentRightAnswer.value))
+        _displayedElements.value = defineDisplayedElements2(listOf(_currentRightAnswer.value))
     }
 
-    fun defineDisplayedElements(noteList: List<String>): List<DisplayedElement>{
+    fun defineDisplayedElements2(noteList: List<String>): List<DisplayedElement>{
         var result = mutableListOf<DisplayedElement>()
         noteList.forEach {
+//            var noteName = it.get("nota")
             result.add(when(it){
+                "ми" -> DisplayedElement(1f)
+                "фа" -> DisplayedElement(1.5f)
+                "соль" -> DisplayedElement(2f)
+                "ля" -> DisplayedElement(2.5f)
+                "си" -> DisplayedElement(3f)
+                "до2" -> DisplayedElement(3.5f)
+                "ре2" -> DisplayedElement(4f)
+                "до" -> DisplayedElement(3.5f)
+                "ре" -> DisplayedElement(4f)
+                else -> DisplayedElement()
+            })
+        }
+        return result
+    }
+
+    fun defineDisplayedElements(noteList: List<Map<String, String>>): List<DisplayedElement>{
+        var result = mutableListOf<DisplayedElement>()
+        noteList.forEach {
+            var noteName = it.get("nota")
+            result.add(when(noteName){
                 "ми" -> DisplayedElement(1f)
                 "фа" -> DisplayedElement(1.5f)
                 "соль" -> DisplayedElement(2f)
@@ -173,11 +204,11 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             saveTest(
                 MusicTestEntity(
                     serverResponseCollection.value.id.oid,
-                    sectionsId = "0",
+                    testName = serverResponseCollection.value.testName,
+                    sectionsId = serverResponseCollection.value.sectionsId,
                     questionArray = _serverResponseCollection.value.questionArray,
-                    answerArray = _serverResponseCollection.value.answerArray,
-                    uiType = _serverResponseCollection.value.uiType,
-                    displayedElements = _serverResponseCollection.value.displayedElements
+                    teacherId =serverResponseCollection.value.teacherId,
+                    test_id = serverResponseCollection.value.test_id
                 )
             )
             viewModelScope.launch {
@@ -198,14 +229,14 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             }
             return
         } else {
-            _answersList.value = _serverResponseCollection
-                .value.answerArray[_currentQuestionNum.value].shuffled()
-
             _currentRightAnswer.value = _serverResponseCollection
-                .value.answerArray[_currentQuestionNum.value][0]
+                .value.questionArray[_currentQuestionNum.value].answerArray[0]
+
+            _answersList.value = _serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].answerArray.shuffled()
 
             _questionString.value = _serverResponseCollection
-                .value.questionArray[_currentQuestionNum.value]
+                .value.questionArray[_currentQuestionNum.value].questionText
 
             _goNextEvent.value = true
         }
@@ -229,7 +260,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     fun setMistake(answer: String) {
         if (currentMistakeList.value.isEmpty()) {
-            _currentMistakeList.value.add(listOf(_serverResponseCollection.value.sectionsId))
+            _currentMistakeList.value.add(listOf(_serverResponseCollection.value.sectionsId[0]))
         }
         _currentMistakeList.value.add(listOf(answer, _questionString.value))
     }

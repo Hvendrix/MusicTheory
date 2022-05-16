@@ -20,9 +20,11 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.musictheory.ExecutorBuildType
 import com.example.musictheory.R
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
+import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentStudentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -113,6 +115,10 @@ class StudentLoginFragment : Fragment() {
         passwordEditText = binding.passwordEt
         enterButton = binding.enterButton
         registerButton = binding.registerButton
+
+        //Тестирование
+        loginEditText.setText(ExecutorBuildType.mockUserDataFieldLogin())
+        passwordEditText.setText(ExecutorBuildType.mockUserDataFieldPass())
 
         enterButton.setOnClickListener {
 //            postLoginToServer(
@@ -216,21 +222,27 @@ class StudentLoginFragment : Fragment() {
             }
             val responseLoginAwait = responseLogin.await().body()
 
-            val responseUser = async {
-                personalAccountViewModel.getUserFlask(responseLoginAwait?.token?: "")
+            if (activity is MainActivityCallback) {
+                (activity as MainActivityCallback).setToken(responseLoginAwait?.token?: "")
+//                val responseUser = async {
+//                    personalAccountViewModel.getUserFlask((activity as MainActivityCallback).getToken())
+                    personalAccountViewModel.loginIn((activity as MainActivityCallback).getToken())
+//                }
+//                val responseUserAwait = responseUser.await().body()?.data
+//                when {
+//                    responseUserAwait == null -> {
+//                        personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+//                    }
+//                    responseUserAwait.login.isNotEmpty() -> {
+//                        personalAccountViewModel.setEmail(responseUserAwait)
+//                    }
+//                    else -> {
+////                        Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
             }
-            val responseUserAwait = responseUser.await().body()?.data
-            when {
-                responseUserAwait == null -> {
-                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
-                }
-                responseUserAwait.login.isNotEmpty() -> {
-                    personalAccountViewModel.setEmail(responseUserAwait)
-                }
-                else -> {
-                    Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
-                }
-            }
+
+
 //            when {
 //                responseLoginAwait == null -> {
 //                    personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)

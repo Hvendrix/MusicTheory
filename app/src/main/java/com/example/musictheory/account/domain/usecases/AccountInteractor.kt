@@ -3,13 +3,14 @@ package com.example.musictheory.account.domain.usecases
 import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
+import com.example.musictheory.trainingtest.data.model.Question
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AccountInteractor(
 
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
 ) : MainInteractor {
     suspend fun getTests(): ServerResponseMusicTest = withContext(Dispatchers.IO) {
         return@withContext mainRepository.getMusicTest("tests")
@@ -20,7 +21,7 @@ class AccountInteractor(
         token: String,
         name: String,
         teacher: Boolean,
-        pass: String
+        pass: String,
     ) = withContext(
         Dispatchers.IO
     ) {
@@ -91,48 +92,42 @@ class AccountInteractor(
         mainRepository.getUserFlask(token)
             .execute()
     }
-    suspend fun postTest() = withContext(Dispatchers.IO) {
-        mainRepository.postTest(
-            PostMusicTest(
-                "tests",
-                listOf(
-                    MusicTestWithoutId(
-//                        Id("61938bd1acbd9e7bba8a53d9"),
-                        sectionsId = "2",
-                        questionArray = listOf("question1"),
-                        answerArray = listOf(
-                            listOf("yes", "no")
-                        ),
-                        uiType = listOf("none"),
-                        displayedElements = listOf(),
-                        testName = "Name"
-                    )
-                )
-            )
-        )
-            .execute()
-    }
+//    suspend fun postTest() = withContext(Dispatchers.IO) {
+//        mainRepository.postTest(
+//            PostMusicTest(
+//                "tests",
+//                listOf(
+//                    MusicTestWithoutId(
+////                        Id("61938bd1acbd9e7bba8a53d9"),
+//                        sectionsId = "2",
+//                        questionArray = listOf("question1"),
+//                        answerArray = listOf(
+//                            listOf("yes", "no")
+//                        ),
+//                        uiType = listOf("none"),
+//                        displayedElements = listOf(),
+//                        testName = "Name"
+//                    )
+//                )
+//            )
+//        )
+//            .execute()
+//    }
 
     suspend fun postTest(
-        questionArray: List<String>,
-        answerArray: List<List<String>>,
-        uiType: List<String>,
+        token: String,
         testName: String,
-        displayedElement: List<List<String>> = listOf(),
+        sectionId: List<String>,
+        questionArray: List<Question>,
+        teacherId: String,
     ) = withContext(Dispatchers.IO) {
         mainRepository.postTest(
-            PostMusicTest(
-                "tests",
-                listOf(
-                    MusicTestWithoutId(
-                        sectionsId = "1",
-                        questionArray = questionArray,
-                        answerArray = answerArray,
-                        uiType = uiType,
-                        displayedElements = displayedElement,
-                        testName = testName
-                    )
-                )
+            token,
+            MusicTestWithoutId(
+                testName = testName,
+                sectionsId = listOf("1"),
+                questionArray = questionArray,
+                teacherId = teacherId
             )
         )
             .execute()

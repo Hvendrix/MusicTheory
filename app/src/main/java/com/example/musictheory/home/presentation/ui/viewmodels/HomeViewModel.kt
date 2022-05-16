@@ -39,10 +39,10 @@ class HomeViewModel @Inject constructor(
 //                )
 //        }
 //    }
-    fun getCategories() = viewModelScope.launch {
-//        val response = homeInteractor.getCategories()
-        val response = homeInteractor.getCategoriesLocal()
-        _categories.postValue(response.data.collection)
+    fun getCategories(token: String) = viewModelScope.launch {
+        val response = homeInteractor.getCategories(token)
+//        val response = homeInteractor.getCategoriesLocal()
+        _categories.postValue(response.data)
     }
 
 
