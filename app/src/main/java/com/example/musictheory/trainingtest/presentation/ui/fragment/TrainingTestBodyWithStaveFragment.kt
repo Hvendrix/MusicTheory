@@ -61,7 +61,7 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
                     trainingTestViewModel.displayedElements.collect{
                         binding.signsOnStave.removeAllViews()
                         it.forEach { el ->
-                            createSignView(binding, el.lineNumVertical)
+                            createSignView(binding, el.lineNumVertical, horizontalPosition = el.horizontalPosition)
                         }
                         binding.signsOnStave.requestLayout()
                     }
@@ -117,6 +117,7 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
         binding: FragmentTrainingTestBodyWithStaveBinding,
         numLine: Float = 0f,
         selectedImg: Int = R.drawable.ic_int_note,
+        horizontalPosition: String = ""
     ){
         if(numLine==0f){
             return
@@ -124,7 +125,7 @@ class TrainingTestBodyWithStaveFragment : Fragment(), OnItemClickListener {
         val signView = IntNoteImage(this.requireContext())
         signView.id = View.generateViewId()
         signView.setImageResource(selectedImg)
-        signView.setAttr(numLine)
+        signView.setAttr(numLine, horizontalPosition)
         binding.signsOnStave.addView(signView)
 
     }

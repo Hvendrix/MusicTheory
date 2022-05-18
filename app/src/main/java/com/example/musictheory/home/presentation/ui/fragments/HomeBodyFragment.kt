@@ -21,7 +21,7 @@ class HomeBodyFragment : Fragment() {
 //    lateinit var homeViewModel: HomeViewModel
 
     private val homeViewModel
-    by hiltNavGraphViewModels<HomeViewModel>(R.id.nested_navigation_home)
+            by hiltNavGraphViewModels<HomeViewModel>(R.id.nested_navigation_home)
 
     private var _binding: FragmentHomeBodyBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +33,7 @@ class HomeBodyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentHomeBodyBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -45,6 +45,14 @@ class HomeBodyFragment : Fragment() {
                         (activity as MainActivityCallback).goTestFragment(oid)
                     }
                 }
+            },
+            object : CategoriesAdapter.OnEditImgClickListener {
+                override fun onItemClick(position: Int) {
+                    val musicTest = categoriesAdapter.currentList.get(position)
+                    if (activity is MainActivityCallback) {
+                        (activity as MainActivityCallback).goAddTestFragment(musicTest.test_id)
+                    }
+                }
             }
         )
         setUpRecyclerView(categoriesAdapter)
@@ -52,8 +60,8 @@ class HomeBodyFragment : Fragment() {
         if (activity is MainActivityCallback) {
             token = (activity as MainActivityCallback).getToken()
         }
-        if(token!="")
-        homeViewModel.getCategories(token)
+        if (token != "")
+            homeViewModel.getCategories(token)
         else {
 //            if(activity is MainActivityCallback){
 //                (activity as MainActivityCallback).goAccount("","")

@@ -75,7 +75,9 @@ class AccountFragment : Fragment() {
         }
 
         binding.buttonAddTestAccount.setOnClickListener {
+            personalAccountViewModel.setOid("")
             personalAccountViewModel.setRegister(PersonalAccountFragments.ADDTEST)
+
 //            if (activity is MainActivityCallback) {
 //                (activity as MainActivityCallback).goAddTestFragment()
 //            }

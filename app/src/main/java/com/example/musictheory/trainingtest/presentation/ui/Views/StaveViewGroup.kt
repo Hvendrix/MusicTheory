@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.annotation.AttrRes
 import com.example.musictheory.R
+import timber.log.Timber
 
 class StaveViewGroup @JvmOverloads constructor(
     context: Context,
@@ -36,10 +37,19 @@ class StaveViewGroup @JvmOverloads constructor(
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         var x = paddingLeft + 100
         var y = 0
+        var xBiasNext = 0
         for (i in 0 until childCount) {
             getChildAt(i).let{
                 if(it is IntNoteImage){
-                    y = defineLineCoordinate(it.getAttr())
+                    y = defineLineCoordinate(it.posVertical)
+                    Timber.v("t1 ${it.posHorizontal}")
+                    if (it.posHorizontal =="double_stops") {
+                        xBiasNext -= measuredWidth / childCount
+                        if(getChildAt(i+1)!=null && getChildAt(i+1) is IntNoteImage
+                            && ((getChildAt(i+1) as IntNoteImage).posVertical) - it.posVertical  <= 0.5f){
+                            xBiasNext += (13f*density).toInt()
+                        }
+                    } else xBiasNext = 0
                 }
                 it.layout(
                     x,
@@ -47,10 +57,10 @@ class StaveViewGroup @JvmOverloads constructor(
                     x+it.measuredWidth,
                     y+it.measuredHeight
                 )
-
+                x += xBiasNext + measuredWidth / childCount
+                y += (5f*density).toInt()
             }
-            x += measuredWidth / childCount
-            y += (5f*density).toInt()
+
         }
 
     }

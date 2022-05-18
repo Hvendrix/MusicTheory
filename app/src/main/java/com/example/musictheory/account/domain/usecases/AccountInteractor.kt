@@ -12,8 +12,13 @@ class AccountInteractor(
 
     private val mainRepository: MainRepository,
 ) : MainInteractor {
-    suspend fun getTests(): ServerResponseMusicTest = withContext(Dispatchers.IO) {
-        return@withContext mainRepository.getMusicTest("tests")
+//    suspend fun getTests(): ServerResponseMusicTest = withContext(Dispatchers.IO) {
+//        return@withContext mainRepository.getMusicTest("tests")
+//            .execute().body() ?: error("not found")
+//    }
+
+    suspend fun getTests(token: String): ServerResponseMusicTest = withContext(Dispatchers.IO) {
+        return@withContext mainRepository.getMusicTest(token)
             .execute().body() ?: error("not found")
     }
 
@@ -124,6 +129,26 @@ class AccountInteractor(
         mainRepository.postTest(
             token,
             MusicTestWithoutId(
+                testName = testName,
+                sectionsId = listOf("1"),
+                questionArray = questionArray,
+                teacherId = teacherId
+            )
+        )
+            .execute()
+    }
+    suspend fun postTest(
+        token: String,
+        testName: String,
+        sectionId: List<String>,
+        questionArray: List<Question>,
+        teacherId: String,
+        id: Int,
+    ) = withContext(Dispatchers.IO) {
+        mainRepository.postTest(
+            token,
+            PostEditMusicTest(
+                testId = id.toString(),
                 testName = testName,
                 sectionsId = listOf("1"),
                 questionArray = questionArray,

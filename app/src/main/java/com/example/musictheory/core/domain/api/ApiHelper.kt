@@ -24,6 +24,8 @@ interface ApiHelper {
 
     suspend fun postTest(token: String, postMusicTest: MusicTestWithoutId): Call<AnswerResult>
 
+    suspend fun postTest(token: String, postMusicTest: PostEditMusicTest): Call<AnswerResult>
+
     suspend fun postResult(postResult: PostResult): Call<PostResult>
 
     suspend fun postDeleteTest(postDeleteTest: PostDeleteTest): Call<PostDeleteTest>

@@ -8,10 +8,14 @@ import com.example.musictheory.home.presentation.ui.lists.differCallback
 import com.example.musictheory.home.presentation.ui.lists.viewholders.CategoriesViewHolder
 import com.example.musictheory.trainingtest.data.model.MusicTest
 
-class CategoriesAdapter(private var listener: OnItemClickListener) :
+class CategoriesAdapter(private var listener: OnItemClickListener, private var listenerEditImg: OnEditImgClickListener) :
     ListAdapter<MusicTest, CategoriesViewHolder>(differCallback) {
 
     interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    interface OnEditImgClickListener {
         fun onItemClick(position: Int)
     }
 
@@ -22,7 +26,8 @@ class CategoriesAdapter(private var listener: OnItemClickListener) :
                 parent,
                 false,
             ),
-            listener
+            listener,
+            listenerEditImg
         )
     }
 

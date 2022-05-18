@@ -8,7 +8,10 @@ import com.example.musictheory.account.data.model.ResponseUser
 import com.example.musictheory.account.data.model.UserFlask
 import com.example.musictheory.account.domain.usecases.AccountInteractor
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
+import com.example.musictheory.home.presentation.model.Id
+import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.example.musictheory.trainingtest.data.model.Question
+import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import javax.inject.Inject
@@ -17,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import timber.log.Timber
 
 @HiltViewModel
 class PersonalAccountViewModel @Inject constructor() : ViewModel() {
@@ -31,6 +35,14 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
     fun setRegister(fragment: PersonalAccountFragments) {
         _goRegister.value = fragment
     }
+
+    private val _currentMusicOid = MutableStateFlow("")
+    val currentMusicOid: StateFlow<String> = _currentMusicOid.asStateFlow()
+
+    private val _musicTest = MutableStateFlow<MusicTest>(
+        MusicTest(Id(""), "", listOf(), listOf(), "", "")
+    )
+    val musicTest: StateFlow<MusicTest> = _musicTest.asStateFlow()
 
 //    private val _token = MutableStateFlow<String>("")
 //    val token: StateFlow<String> = _token.asStateFlow()
@@ -83,6 +95,10 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         _user.value = email
     }
 
+    fun setOid(oid: String) {
+        _currentMusicOid.value = oid
+    }
+
 //    fun setToken(token: String){
 //        _token.value = "Bearer $token"
 //    }
@@ -109,6 +125,26 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    suspend fun getTests(token: String): ServerResponseMusicTest {
+//        _currentQuestionOid.value = "1"
+        return accountInteractor.getTests(token)
+//        return trainingTestInteractor.getLocalTests2()
+    }
+
+    fun getData(serverResponse: ServerResponseMusicTest) {
+        if (_currentMusicOid.value.isNullOrBlank())
+            _musicTest.value = MusicTest(Id(""), "", listOf(), listOf(), "", "")
+        else {
+            _musicTest.value = serverResponse.data[0]
+            Timber.i("t1 get data oid ${currentMusicOid.value}")
+            serverResponse.data.forEach {
+                if (it.test_id == currentMusicOid.value) {
+                    _musicTest.value = it
+                }
+            }
+        }
+    }
+
 
     suspend fun postTestToServer(
         token: String,
@@ -116,8 +152,12 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         sectionId: List<String>,
         questionArray: List<Question>,
         teacherId: String,
+        id: Int = -1,
     ) {
-        accountInteractor.postTest(token, testName, sectionId, questionArray, teacherId)
+        if (id == -1)
+            accountInteractor.postTest(token, testName, sectionId, questionArray, teacherId)
+        else
+            accountInteractor.postTest(token, testName, sectionId, questionArray, teacherId, id)
     }
 
     suspend fun postDeleteTest() {

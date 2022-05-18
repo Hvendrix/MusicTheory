@@ -46,6 +46,9 @@ fun getMusicTest(
     @POST("test")
     fun postTest(@Header("Authorization") token: String, @Body postMusicTest: MusicTestWithoutId): Call<AnswerResult>
 
+    @POST("test")
+    fun postTest(@Header("Authorization") token: String, @Body postMusicTest: PostEditMusicTest): Call<AnswerResult>
+
     @POST("put_data/")
     fun postResult(@Body postResult: PostResult): Call<PostResult>
 

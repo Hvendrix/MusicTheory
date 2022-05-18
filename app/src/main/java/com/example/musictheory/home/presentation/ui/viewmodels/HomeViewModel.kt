@@ -43,6 +43,7 @@ class HomeViewModel @Inject constructor(
         val response = homeInteractor.getCategories(token)
 //        val response = homeInteractor.getCategoriesLocal()
         _categories.postValue(response.data)
+        Timber.i("t1 categ ${_categories.value.toString()}")
     }
 
 

@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="IntNoteImage">
         <attr name="numLineVertical" format="float" />
+        <attr name="horizontal_position" format="float" />
 
 
     </declare-styleable>

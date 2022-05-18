@@ -1,7 +1,6 @@
 package com.example.musictheory.trainingtest.domain.usecases
 
 import com.example.musictheory.account.data.model.MusicTestWithoutId
-import com.example.musictheory.account.data.model.PostMusicTest
 import com.example.musictheory.core.domain.repository.MainRepository
 import com.example.musictheory.core.domain.usecases.MainInteractor
 import com.example.musictheory.home.presentation.model.Id

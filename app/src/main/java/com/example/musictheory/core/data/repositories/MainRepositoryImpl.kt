@@ -36,6 +36,11 @@ class MainRepositoryImpl(
         postMusicTest: MusicTestWithoutId
     ): Call<AnswerResult> = apiHelper.postTest(token, postMusicTest)
 
+    override suspend fun postTest(
+        token: String,
+        postMusicTest: PostEditMusicTest
+    ): Call<AnswerResult> = apiHelper.postTest(token, postMusicTest)
+
     override suspend fun postResult(
         postResult: PostResult
     ): Call<PostResult> = apiHelper.postResult(postResult)

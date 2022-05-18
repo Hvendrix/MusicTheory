@@ -17,6 +17,7 @@ import com.example.musictheory.core.presenter.ThemeManager
 import com.example.musictheory.core.presenter.ThemeManager.DARK_MODE
 import com.example.musictheory.core.presenter.ThemeManager.LIGHT_MODE
 import com.example.musictheory.databinding.ActivityMainBinding
+import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -117,6 +118,14 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
         navController.navigate(R.id.action_accountFragment_to_addTestFragment)
     }
 
+    override fun goAddTestFragment(id: String) {
+        val bundle = Bundle()
+        bundle.putString(Companion.testId, id)
+        navController.navigate(R.id.action_global_nested_personal_account, bundle)
+
+//        navController.navigate(R.id.action_accountFragment_to_addTestFragment)
+    }
+
     private fun toggleTheme(isDark: Boolean): Boolean {
         val mode = when (isDark) {
             true -> LIGHT_MODE
@@ -151,5 +160,9 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
     override fun onDestroy() {
         super.onDestroy()
         _navView = null
+    }
+
+    companion object {
+        const val testId = "TEST_ID"
     }
 }

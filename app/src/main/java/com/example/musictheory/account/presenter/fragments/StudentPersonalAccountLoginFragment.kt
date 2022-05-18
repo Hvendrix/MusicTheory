@@ -9,6 +9,7 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.musictheory.MainActivity
 import com.example.musictheory.R
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
@@ -82,6 +83,11 @@ class StudentPersonalAccountLoginFragment : Fragment() {
                     }
                 }
             }
+        }
+        val oid = arguments?.getString(MainActivity.testId)
+        personalAccountViewModel.setOid(oid.toString())
+        if(!oid.isNullOrBlank()){
+            personalAccountViewModel.setRegister(PersonalAccountFragments.ADDTEST)
         }
         return binding.root
 //        return inflater.inflate(R.layout.fragment_student_personal_account_login, container, false)

@@ -7,7 +7,8 @@ import com.example.musictheory.trainingtest.data.model.MusicTest
 
 class CategoriesViewHolder(
     private val binding: TestCategoryCardBinding,
-    listener: CategoriesAdapter.OnItemClickListener
+    listener: CategoriesAdapter.OnItemClickListener,
+    listenerEditImgClickListener: CategoriesAdapter.OnEditImgClickListener
 ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(data: MusicTest) {
@@ -17,8 +18,15 @@ class CategoriesViewHolder(
     }
 
     init {
-        itemView.setOnClickListener {
+        binding.categoryTitle.setOnClickListener {
             listener.onItemClick(adapterPosition)
         }
+        binding.imgEdit.setOnClickListener {
+            listenerEditImgClickListener.onItemClick(adapterPosition)
+        }
+//        itemView.setOnClickListener {
+//            listener.onItemClick(adapterPosition)
+//        }
+
     }
 }

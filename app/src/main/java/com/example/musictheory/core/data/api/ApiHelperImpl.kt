@@ -35,6 +35,10 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
         return apiService.postTest(token, postMusicTest)
     }
 
+    override suspend fun postTest(token: String, postMusicTest: PostEditMusicTest): Call<AnswerResult> {
+        return apiService.postTest(token, postMusicTest)
+    }
+
     override suspend fun postResult(postResult: PostResult): Call<PostResult> {
         return apiService.postResult(postResult)
     }

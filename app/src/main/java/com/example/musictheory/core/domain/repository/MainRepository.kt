@@ -29,6 +29,11 @@ interface MainRepository {
         postMusicTest: MusicTestWithoutId
     ): Call<AnswerResult>
 
+    suspend fun postTest(
+        token: String,
+        postMusicTest: PostEditMusicTest
+    ): Call<AnswerResult>
+
     suspend fun postResult(
         postResult: PostResult
     ): Call<PostResult>
