@@ -1,4 +1,4 @@
-package com.example.musictheory.model
+package com.example.musictheory.core.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

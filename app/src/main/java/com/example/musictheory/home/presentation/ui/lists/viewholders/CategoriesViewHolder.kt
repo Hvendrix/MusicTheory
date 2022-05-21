@@ -1,5 +1,6 @@
 package com.example.musictheory.home.presentation.ui.lists.viewholders
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musictheory.databinding.TestCategoryCardBinding
 import com.example.musictheory.home.presentation.ui.lists.adapters.CategoriesAdapter
@@ -11,10 +12,14 @@ class CategoriesViewHolder(
     listenerEditImgClickListener: CategoriesAdapter.OnEditImgClickListener
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(data: MusicTest) {
+    fun bind(data: MusicTest, b: Boolean) {
         with(binding) {
             categoryTitle.text = data.testName
         }
+        if(b)
+            binding.imgEdit.visibility = View.VISIBLE
+        else
+            binding.imgEdit.visibility = View.GONE
     }
 
     init {
@@ -24,6 +29,8 @@ class CategoriesViewHolder(
         binding.imgEdit.setOnClickListener {
             listenerEditImgClickListener.onItemClick(adapterPosition)
         }
+
+
 //        itemView.setOnClickListener {
 //            listener.onItemClick(adapterPosition)
 //        }

@@ -8,17 +8,17 @@ import com.google.gson.annotations.SerializedName
  */
 data class MusicTest(
     @SerializedName("_id")
-    val id: Id,
+    val id: Id = Id(""),
     @SerializedName("name")
-    val testName: String,
+    val testName: String = "",
     @SerializedName("question_array")
-    val questionArray: List<Question>,
+    val questionArray: MutableList<Question> = mutableListOf(),
     @SerializedName("section")
-    val sectionsId: List<String>,
+    val sectionsId: List<String> = listOf(),
     @SerializedName("teacher_id")
-    val teacherId: String,
+    val teacherId: String ="",
     @SerializedName("test_id")
-    val test_id: String
+    val test_id: String =""
 
 
 )

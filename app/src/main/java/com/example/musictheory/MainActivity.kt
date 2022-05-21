@@ -11,17 +11,20 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.musictheory.account.data.model.UserFlask
+import com.example.musictheory.account.presenter.fragments.AddQuestionFragment
 import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.core.presenter.ThemeManager
 import com.example.musictheory.core.presenter.ThemeManager.DARK_MODE
 import com.example.musictheory.core.presenter.ThemeManager.LIGHT_MODE
 import com.example.musictheory.databinding.ActivityMainBinding
-import com.example.musictheory.trainingtest.data.model.MusicTest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityCallback {
@@ -65,6 +68,8 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
         val view = binding.root
         setContentView(view)
 
+
+
         _navView = findViewById(R.id.nav_view)
         _navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -82,7 +87,7 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
     }
 
     private suspend fun showDataFromServer(
-        serverResponse: ServerResponse
+        serverResponse: ServerResponse,
     ) = withContext(Dispatchers.Main) {
         Toast.makeText(
             this@MainActivity,
@@ -149,12 +154,21 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
         navController.navigate(R.id.accountFragment)
     }
 
+
     override fun setToken(token: String) {
         viewModel.setToken(token)
     }
 
     override fun getToken(): String {
         return viewModel.token.value
+    }
+
+    override fun setUser(user: UserFlask?) {
+       viewModel.setUser(user)
+    }
+
+    override fun getUser(): UserFlask? {
+        return viewModel.user.value
     }
 
     override fun onDestroy() {
@@ -164,5 +178,6 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
 
     companion object {
         const val testId = "TEST_ID"
+        const val addQuestion = "ADD_QUESTION"
     }
 }

@@ -17,8 +17,10 @@
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
-    <navigation android:id="@+id/nested_navigation_training_test"
-            app:startDestination="@id/navigation_nested_navigation_training_test">
+    <navigation
+            android:id="@+id/nested_navigation_training_test"
+            app:startDestination="@id/navigation_nested_navigation_training_test"
+            android:label="Прохождение теста">
         <fragment
                 android:id="@+id/trainingTestHeaderFragment"
                 android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TrainingTestHeaderFragment"
@@ -37,32 +39,32 @@
         <fragment
                 android:id="@+id/navigation_nested_navigation_training_test"
                 android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TrainingTestFragment"
-                android:label="training_test_fragment"
-                tools:layout="@layout/training_test_fragment" >
+                android:label="Прохожение теста"
+                tools:layout="@layout/training_test_fragment">
             <action
                     android:id="@+id/action_navigation_nested_navigation_training_test_to_resultFragment"
                     app:destination="@id/resultFragment"
                     app:popUpTo="@id/nested_navigation_training_test" />
         </fragment>
         <fragment
-            android:id="@+id/tempFragment"
-            android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TempFragment"
-            android:label="fragment_temp"
-            tools:layout="@layout/fragment_temp" />
+                android:id="@+id/tempFragment"
+                android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TempFragment"
+                android:label="fragment_temp"
+                tools:layout="@layout/fragment_temp" />
         <fragment
-            android:id="@+id/resultFragment"
-            android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.ResultFragment"
-            android:label="fragment_result"
-            tools:layout="@layout/fragment_result" >
+                android:id="@+id/resultFragment"
+                android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.ResultFragment"
+                android:label="Результаты"
+                tools:layout="@layout/fragment_result">
             <argument
                     android:name="id"
                     app:argType="long"
                     android:defaultValue="0L" />
         </fragment>
         <fragment
-            android:id="@+id/trainingTestBodyWithStaveFragment"
-            android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TrainingTestBodyWithStaveFragment"
-            android:label="TrainingTestBodyWithStaveFragment" />
+                android:id="@+id/trainingTestBodyWithStaveFragment"
+                android:name="com.example.musictheory.trainingtest.presentation.ui.fragment.TrainingTestBodyWithStaveFragment"
+                android:label="TrainingTestBodyWithStaveFragment" />
 
     </navigation>
     <navigation android:id="@+id/nested_navigation_home"
@@ -108,8 +110,8 @@
         <fragment
                 android:id="@+id/studentPersonalAccountLoginFragment"
                 android:name="com.example.musictheory.account.presenter.fragments.StudentPersonalAccountLoginFragment"
-                android:label="fragment_student_personal_account_login"
-                tools:layout="@layout/fragment_student_personal_account_login" >
+                android:label="Аккаунт"
+                tools:layout="@layout/fragment_student_personal_account_login">
             <argument
                     android:name="OID"
                     app:argType="string"
@@ -137,6 +139,15 @@
                 android:id="@+id/addTestFragment"
                 android:name="com.example.musictheory.account.presenter.fragments.AddTestFragment"
                 android:label="add_test_fragment"
-                tools:layout="@layout/add_test_fragment" />
+                tools:layout="@layout/add_test_fragment" >
+            <action
+                    android:id="@+id/action_addTestFragment_to_addQuestionFragment"
+                    app:destination="@id/addQuestionFragment" />
+        </fragment>
+        <fragment
+                android:id="@+id/addQuestionFragment"
+                android:name="com.example.musictheory.account.presenter.fragments.AddQuestionFragment"
+                android:label="fragment_add_question"
+                tools:layout="@layout/fragment_add_question" />
     </navigation>
 </navigation>

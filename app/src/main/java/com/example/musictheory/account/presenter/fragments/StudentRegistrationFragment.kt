@@ -121,9 +121,9 @@ class StudentRegistrationFragment : Fragment() {
                     personalAccountViewModel.user.collect {
                         if (it != null && it.login.isNotEmpty() && it.role.isNotEmpty()) {
                             personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
-//                            if (activity is MainActivityCallback) {
-//                                (activity as MainActivityCallback).goAccount(it.name, it.role)
-//                            }
+                            if (activity is MainActivityCallback) {
+                                (activity as MainActivityCallback).setUser(it)
+                            }
                         }
 //                        binding.loginEt.setText(it)
 //                        try {
@@ -157,7 +157,7 @@ class StudentRegistrationFragment : Fragment() {
                     personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
                 }
                 !signUpResponseAwait.name.isNullOrEmpty() -> {
-                    personalAccountViewModel.setEmail(signUpResponseAwait)
+                    personalAccountViewModel.setUser(signUpResponseAwait)
                 }
                 else -> {
                     Toast.makeText(
@@ -178,7 +178,7 @@ class StudentRegistrationFragment : Fragment() {
                         }
                         responseLoginAwait.name.isNotEmpty() -> {
                             personalAccountViewModel
-                                .setEmail(responseLoginAwait)
+                                .setUser(responseLoginAwait)
                         }
                         else -> {
                             Toast.makeText(
@@ -219,7 +219,7 @@ class StudentRegistrationFragment : Fragment() {
                         personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
                     }
                     !responseUserAwait.login.isNullOrEmpty() -> {
-                        personalAccountViewModel.setEmail(responseUserAwait)
+                        personalAccountViewModel.setUser(responseUserAwait)
                     }
                     else -> {
                         Toast.makeText(

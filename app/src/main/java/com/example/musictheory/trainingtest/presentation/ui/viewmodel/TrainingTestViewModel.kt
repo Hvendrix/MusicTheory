@@ -3,8 +3,7 @@ package com.example.musictheory.trainingtest.presentation.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musictheory.core.data.Repository
-import com.example.musictheory.home.presentation.model.Id
-import com.example.musictheory.model.Result
+import com.example.musictheory.core.data.model.Result
 import com.example.musictheory.trainingtest.data.model.*
 import com.example.musictheory.trainingtest.data.model.notes.WhiteNotes
 import com.example.musictheory.trainingtest.domain.usecases.TrainingTestInteractor
@@ -39,7 +38,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     val currentQuestionOid: StateFlow<String> = _currentQuestionOid.asStateFlow()
 
     private val _serverResponseCollectionList = MutableStateFlow<List<MusicTest>>(
-        listOf(MusicTest(Id(""), "", listOf(), listOf(), "", ""))
+        listOf(MusicTest())
     )
 
 //    val serverResponseCollectionList:
@@ -47,7 +46,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 //            = _serverResponseCollectionList.asStateFlow()
 
     private val _serverResponseCollection = MutableStateFlow<MusicTest>(
-        MusicTest(Id(""), "", listOf(), listOf(), "", "")
+        MusicTest()
     )
     val serverResponseCollection:
             StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
@@ -67,6 +66,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     private val _displayedElements: MutableStateFlow<List<DisplayedElement>> =
         MutableStateFlow(listOf())
     val displayedElements: StateFlow<List<DisplayedElement>> = _displayedElements.asStateFlow()
+
+    private val _imageAttachmentUrl: MutableStateFlow<String> =
+        MutableStateFlow("")
+    val imageAttachmentUrl = _imageAttachmentUrl.asStateFlow()
 
     private val _generationSeed: MutableStateFlow<Map<Any, Any>> = MutableStateFlow(mapOf())
     val generationSeed: StateFlow<Map<Any, Any>> = _generationSeed.asStateFlow()
@@ -138,11 +141,15 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _displayedElements.value = defineDisplayedElements(_serverResponseCollection
             .value.questionArray[_currentQuestionNum.value].displayedElements)
 
+        _imageAttachmentUrl.value =_serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].attachmentUrl
+
         _currentMistakeList.value = mutableListOf()
 
 //        when(_uiType.value){
 //            "stave random pick" ->  randomPick()
 //        }
+        Timber.i("t1 ${_serverResponseCollection.value}")
         when (_generationSeed.value.get(GenerationSeed.notes.name)) {
             "from_answers" -> randomPick()
             "from_answers_double_stops" -> randomPickDoubleStops()
@@ -155,8 +162,8 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     fun randomPickChord() {
-        _currentRightAnswer.value = _answersList.value.shuffled()[0]
-        _displayedElements.value = defineDisplayedElementsDoubleStops(defineChord(_currentRightAnswer.value))
+//        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+//        _displayedElements.value = defineDisplayedElementsDoubleStops(defineChord(_currentRightAnswer.value))
         while (_displayedElements.value.isNullOrEmpty()) {
             _currentRightAnswer.value = _answersList.value.shuffled()[0]
             _displayedElements.value = defineDisplayedElementsDoubleStops(defineChord(_currentRightAnswer.value))
@@ -167,6 +174,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     fun randomPick() {
         _currentRightAnswer.value = _answersList.value.shuffled()[0]
         _displayedElements.value = defineDisplayedElements2(listOf(_currentRightAnswer.value))
+        Timber.i("t1 displayed random ${_displayedElements.value}")
     }
 
     fun randomPickDoubleStops() {
@@ -198,10 +206,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 //        result.add(DisplayedElement(lowerPosition, horizontalPosition = "double_stops"))
 //        result.add(DisplayedElement(middlePosition, horizontalPosition = "double_stops"))
 //        result.add(DisplayedElement(upperPosition))
-//        result.add(DisplayedElement(lowerPosition))
-//        result.add(DisplayedElement(middlePosition))
-        result.add(DisplayedElement(upperPosition, horizontalPosition = "double_stops"))
-        result.add(DisplayedElement(upperPosition2))
+        result.add(DisplayedElement(lowerPosition))
+        result.add(DisplayedElement(middlePosition))
+        result.add(DisplayedElement(upperPosition))
+//        result.add(DisplayedElement(upperPosition2))
         return result
     }
 
@@ -234,16 +242,19 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     fun defineChord(chord: String): Pair<String, String>{
-        return when(chord){
+        return when(chord.lowercase()){
             "трезвучие" -> Pair("терция", "терция")
             "секстаккорд" ->Pair("терция", "кварта")
-            "квартсекстаккорд" ->Pair("терция", "кварта")
-            else -> Pair("терция", "терция")
+            "квартсекстаккорд" ->Pair("кварта", "терция")
+            else -> {
+
+                Timber.i("t1 не тот аккорд $chord")
+                Pair("терция", "терция")}
         }
     }
 
     fun defineDoubleStops(doubleStops: String): Float {
-        return when (doubleStops) {
+        return when (doubleStops.lowercase()) {
             "секунда" -> 0.5f
             "терция" -> 1f
             "кварта" -> 1.5f
@@ -259,7 +270,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         var result = mutableListOf<DisplayedElement>()
         noteList.forEach {
 //            var noteName = it.get("nota")
-            result.add(when (it) {
+            result.add(when (it.lowercase()) {
                 "ми" -> DisplayedElement(1f)
                 "фа" -> DisplayedElement(1.5f)
                 "соль" -> DisplayedElement(2f)
@@ -279,7 +290,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         var result = mutableListOf<DisplayedElement>()
         noteList.forEach {
             var noteName = it.get("nota")
-            result.add(when (noteName) {
+            result.add(when (noteName?.lowercase()) {
                 "ми" -> DisplayedElement(1f)
                 "фа" -> DisplayedElement(1.5f)
                 "соль" -> DisplayedElement(2f)

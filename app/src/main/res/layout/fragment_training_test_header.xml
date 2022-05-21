@@ -29,6 +29,7 @@
             android:textColor="?attr/colorPrimary"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textSize="20sp"
             tools:text="header" />
 
 

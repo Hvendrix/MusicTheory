@@ -18,6 +18,7 @@ import com.example.musictheory.databinding.FragmentStudentPersonalAccountLoginBi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class StudentPersonalAccountLoginFragment : Fragment() {
@@ -47,6 +48,7 @@ class StudentPersonalAccountLoginFragment : Fragment() {
 
                 launch {
                     personalAccountViewModel.goRegister.collect {
+                        Timber.i("t1 $it")
                         when (it) {
                             PersonalAccountFragments.REGISTRATION -> {
                                 val studentRegistrationFragment = StudentRegistrationFragment()
@@ -72,10 +74,19 @@ class StudentPersonalAccountLoginFragment : Fragment() {
                                     commit()
                                 }
                             }
-                            PersonalAccountFragments.ADDTEST -> {
+                            PersonalAccountFragments.ADD_TEST -> {
                                 val addTestFragment = AddTestFragment()
                                 childFragmentManager.beginTransaction().apply {
                                     replace(R.id.login_body, addTestFragment)
+                                    addToBackStack(null)
+                                    commit()
+                                }
+                            }
+                            PersonalAccountFragments.ADD_QUESTION -> {
+                                val addQuestionFragment = AddQuestionFragment()
+                                childFragmentManager.beginTransaction().apply {
+                                    replace(R.id.login_body, addQuestionFragment)
+                                    addToBackStack(null)
                                     commit()
                                 }
                             }
@@ -87,7 +98,7 @@ class StudentPersonalAccountLoginFragment : Fragment() {
         val oid = arguments?.getString(MainActivity.testId)
         personalAccountViewModel.setOid(oid.toString())
         if(!oid.isNullOrBlank()){
-            personalAccountViewModel.setRegister(PersonalAccountFragments.ADDTEST)
+            personalAccountViewModel.setRegister(PersonalAccountFragments.ADD_TEST)
         }
         return binding.root
 //        return inflater.inflate(R.layout.fragment_student_personal_account_login, container, false)

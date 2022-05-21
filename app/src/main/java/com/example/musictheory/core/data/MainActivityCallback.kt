@@ -1,5 +1,6 @@
 package com.example.musictheory.core.data
 
+import com.example.musictheory.account.data.model.UserFlask
 import com.example.musictheory.trainingtest.data.model.MusicTest
 
 /**
@@ -16,4 +17,6 @@ interface MainActivityCallback {
     fun goAccount(email: String, role: String)
     fun setToken(token: String)
     fun getToken(): String
+    fun setUser(user: UserFlask?)
+    fun getUser(): UserFlask?
 }

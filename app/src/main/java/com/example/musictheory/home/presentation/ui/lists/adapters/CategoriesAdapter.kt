@@ -19,6 +19,14 @@ class CategoriesAdapter(private var listener: OnItemClickListener, private var l
         fun onItemClick(position: Int)
     }
 
+    var editVisible : Boolean = false
+
+    fun setVisibleEdit(b: Boolean){
+        editVisible=b
+//        notifyDataSetChanged()
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
         return CategoriesViewHolder(
             TestCategoryCardBinding.inflate(
@@ -32,6 +40,6 @@ class CategoriesAdapter(private var listener: OnItemClickListener, private var l
     }
 
     override fun onBindViewHolder(holder: CategoriesViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), editVisible)
     }
 }

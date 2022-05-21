@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musictheory.core.data.Repository
-import com.example.musictheory.model.Result
+import com.example.musictheory.core.data.model.Result
 import com.example.musictheory.trainingtest.data.model.MusicTestEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

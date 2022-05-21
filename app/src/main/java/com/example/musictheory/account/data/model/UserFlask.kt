@@ -12,5 +12,7 @@ data class UserFlask(
     @SerializedName("email")
     val login: String,
     @SerializedName("role")
-    val role: String
+    val role: String,
+    @SerializedName("user_id")
+    val userId: String
 )

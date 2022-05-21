@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName
 
 data class Question (
     @SerializedName("answer_array")
-    val answerArray: List<String>,
+    var answerArray: MutableList<String> = mutableListOf(),
     @SerializedName("attachment_url")
-    val attachmentUrl: String,
+    val attachmentUrl: String = "",
     @SerializedName("displayed_elements")
-    val displayedElements: List<Map<String, String>>,
+    val displayedElements: List<Map<String, String>> = listOf(),
     @SerializedName("generation_seed")
-    val generationSeed: Map<Any, Any>,
+    var generationSeed: MutableMap<Any, Any> = mutableMapOf(),
     @SerializedName("question_text")
-    val questionText: String,
+    var questionText: String = "",
     @SerializedName("ui_type")
-    val uiType: String,
+    var uiType: String ="",
 )

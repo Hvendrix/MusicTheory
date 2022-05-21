@@ -18,7 +18,7 @@ interface ApiHelper {
 
     suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest>
 
-    suspend fun getCategories(token: String): Call<ServerResponseMusicTest>
+    suspend fun getCategories(token: String, userId: String): Call<ServerResponseMusicTest>
 
     suspend fun postSection(serverData: PostSection): Call<SectionsCollection>
 

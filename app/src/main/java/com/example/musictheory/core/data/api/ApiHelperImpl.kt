@@ -23,8 +23,8 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
         return apiService.getMusicTest(token)
     }
 
-    override suspend fun getCategories(token: String): Call<ServerResponseMusicTest> {
-        return apiService.getCategories(token)
+    override suspend fun getCategories(token: String, userId: String): Call<ServerResponseMusicTest> {
+        return apiService.getCategories(token, userId)
     }
 
     override suspend fun postSection(serverData: PostSection): Call<SectionsCollection> {

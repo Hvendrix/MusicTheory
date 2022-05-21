@@ -1,7 +1,7 @@
 package com.example.musictheory.core.data
 
 import com.example.musictheory.core.data.database.ResultsDao
-import com.example.musictheory.model.Result
+import com.example.musictheory.core.data.model.Result
 import com.example.musictheory.trainingtest.data.model.MusicTestEntity
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

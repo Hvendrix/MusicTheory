@@ -14,8 +14,8 @@ class HomeInteractor(
     private val mainRepository: MainRepository
 ): MainInteractor{
 
-    suspend fun getCategories(token: String): ServerResponseMusicTest = withContext(Dispatchers.IO){
-        return@withContext mainRepository.getCategories(token)
+    suspend fun getCategories(token: String, userId : String): ServerResponseMusicTest = withContext(Dispatchers.IO){
+        return@withContext mainRepository.getCategories(token, userId)
             .execute().body() ?: error("not found")
     }
 

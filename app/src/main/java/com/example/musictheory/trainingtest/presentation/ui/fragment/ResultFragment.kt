@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.musictheory.R
 import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentResultBinding
-import com.example.musictheory.model.Result
+import com.example.musictheory.core.data.model.Result
 import com.example.musictheory.trainingtest.data.model.MusicTestEntity
 import com.example.musictheory.trainingtest.presentation.ui.viewmodel.ResultViewModel
 import dagger.hilt.android.AndroidEntryPoint

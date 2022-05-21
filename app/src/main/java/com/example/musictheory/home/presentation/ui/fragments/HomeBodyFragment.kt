@@ -14,6 +14,7 @@ import com.example.musictheory.databinding.FragmentHomeBodyBinding
 import com.example.musictheory.home.presentation.ui.lists.adapters.CategoriesAdapter
 import com.example.musictheory.home.presentation.ui.viewmodels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeBodyFragment : Fragment() {
@@ -61,7 +62,23 @@ class HomeBodyFragment : Fragment() {
             token = (activity as MainActivityCallback).getToken()
         }
         if (token != "")
-            homeViewModel.getCategories(token)
+            if (activity is MainActivityCallback) {
+                val user = (activity as MainActivityCallback).getUser()
+                Timber.i("t1 role home is ${user?.role} id is ${user?.userId}")
+                when (user?.role) {
+                    "admin" -> {
+                        homeViewModel.getCategories(token, "")
+                    }
+                    "teacher" -> {
+                        homeViewModel.getCategories(token, user?.userId ?: "")
+                    }
+                    else -> {
+                        homeViewModel.getCategories(token, "1")
+                    }
+                }
+
+            }
+
         else {
 //            if(activity is MainActivityCallback){
 //                (activity as MainActivityCallback).goAccount("","")
@@ -72,7 +89,17 @@ class HomeBodyFragment : Fragment() {
             viewLifecycleOwner,
             Observer { response ->
                 binding.apply {
+                    Timber.i("submit")
+                    if (activity is MainActivityCallback) {
+                        val user =  (activity as MainActivityCallback).getUser()
+                        Timber.i("t1 roe ${user?.role}")
+                        if (user?.role != null && (user.role=="admin" || user.role=="teacher")){
+                            categoriesAdapter.setVisibleEdit(true)
+                        } else categoriesAdapter.setVisibleEdit(false)
+                    }
                     categoriesAdapter.submitList(response)
+
+
                 }
             }
         )

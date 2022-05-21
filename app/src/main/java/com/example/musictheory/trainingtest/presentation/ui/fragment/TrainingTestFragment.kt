@@ -22,6 +22,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @AndroidEntryPoint
 class TrainingTestFragment : Fragment() {
@@ -39,6 +40,7 @@ class TrainingTestFragment : Fragment() {
         _binding = TrainingTestFragmentBinding.inflate(inflater)
 
         initNestedFragments()
+
 
         // Вызов запроса к серверу через view model
         viewLifecycleOwner.lifecycleScope.launch {
@@ -126,6 +128,11 @@ class TrainingTestFragment : Fragment() {
                 "stave random pick" -> {
                     nextBodyFragment =
                         TrainingTestBodyWithStaveFragment()
+                }
+                "picture" ->{
+                    Timber.i("t1 picture fragment")
+                    nextBodyFragment =
+                        TrainingTestBodyWithImagePicture()
                 }
             }
             if (nextBodyFragment != null) {

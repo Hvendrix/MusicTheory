@@ -145,9 +145,10 @@ class StudentLoginFragment : Fragment() {
                     personalAccountViewModel.user.collect {
                         if (it != null && it.login.isNotEmpty() && it.role.isNotEmpty()) {
                             personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
-//                            if (activity is MainActivityCallback) {
-//                                (activity as MainActivityCallback).goAccount(it.name, it.role)
-//                            }
+
+                            if (activity is MainActivityCallback) {
+                                (activity as MainActivityCallback).setUser(it)
+                            }
                         }
                     }
                 }
@@ -158,7 +159,7 @@ class StudentLoginFragment : Fragment() {
 //                                personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
                             }
                             it.name.isNotEmpty() -> {
-                                personalAccountViewModel.setEmail(it)
+                                personalAccountViewModel.setUser(it)
                             }
                             else -> {
                                 Toast.makeText(context, "${it.result}", Toast.LENGTH_SHORT).show()
@@ -205,7 +206,7 @@ class StudentLoginFragment : Fragment() {
                     personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
                 }
                 responseLoginAwait.name.isNotEmpty() -> {
-                    personalAccountViewModel.setEmail(responseLoginAwait)
+                    personalAccountViewModel.setUser(responseLoginAwait)
                 }
                 else -> {
                     Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
@@ -224,9 +225,11 @@ class StudentLoginFragment : Fragment() {
 
             if (activity is MainActivityCallback) {
                 (activity as MainActivityCallback).setToken(responseLoginAwait?.token?: "")
+
 //                val responseUser = async {
 //                    personalAccountViewModel.getUserFlask((activity as MainActivityCallback).getToken())
                     personalAccountViewModel.loginIn((activity as MainActivityCallback).getToken())
+
 //                }
 //                val responseUserAwait = responseUser.await().body()?.data
 //                when {

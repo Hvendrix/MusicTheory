@@ -40,9 +40,12 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
     val currentMusicOid: StateFlow<String> = _currentMusicOid.asStateFlow()
 
     private val _musicTest = MutableStateFlow<MusicTest>(
-        MusicTest(Id(""), "", listOf(), listOf(), "", "")
+        MusicTest()
     )
     val musicTest: StateFlow<MusicTest> = _musicTest.asStateFlow()
+
+    private val _currentQuestNum = MutableStateFlow(-1)
+    val currentQuestNum: StateFlow<Int> = _currentQuestNum.asStateFlow()
 
 //    private val _token = MutableStateFlow<String>("")
 //    val token: StateFlow<String> = _token.asStateFlow()
@@ -87,11 +90,11 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         return accountInteractor.getUserFlask(token)
     }
 
-    fun setEmail(email: ResponseLogin) {
+    fun setUser(email: ResponseLogin) {
 //        _user.value = email
     }
 
-    fun setEmail(email: UserFlask) {
+    fun setUser(email: UserFlask?) {
         _user.value = email
     }
 
@@ -99,12 +102,27 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
         _currentMusicOid.value = oid
     }
 
-//    fun setToken(token: String){
-//        _token.value = "Bearer $token"
-//    }
+    fun setCurrentNum(num: Int){
+        _currentQuestNum.value = num
+    }
+
+    fun setQuestion(question: Question){
+        _musicTest.value.questionArray[_currentQuestNum.value] = question
+        Timber.i("t1 question $question   ${ _musicTest.value.questionArray[_currentQuestNum.value]}")
+        _musicTest.value = _musicTest.value
+    }
+
 
     fun setServerResponse(responseLogin: ResponseLogin) {
         _serverResponse.value = responseLogin
+    }
+
+    suspend fun setMusicTest(){
+        _musicTest.value = _musicTest.value
+        _musicTest.emit(_musicTest.value)
+//        synchronized(_musicTest.value){
+//            _musicTest.notifyAll()
+//        }
     }
 
 
@@ -119,7 +137,7 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
                     setRegister(PersonalAccountFragments.REGISTRATION)
                 }
                 responseUserAwait.login.isNotEmpty() -> {
-                    setEmail(responseUserAwait)
+                    setUser(responseUserAwait)
                 }
             }
         }
@@ -133,7 +151,7 @@ class PersonalAccountViewModel @Inject constructor() : ViewModel() {
 
     fun getData(serverResponse: ServerResponseMusicTest) {
         if (_currentMusicOid.value.isNullOrBlank())
-            _musicTest.value = MusicTest(Id(""), "", listOf(), listOf(), "", "")
+            _musicTest.value = MusicTest(Id(""), "", mutableListOf(), listOf(), "", "")
         else {
             _musicTest.value = serverResponse.data[0]
             Timber.i("t1 get data oid ${currentMusicOid.value}")

@@ -39,8 +39,8 @@ class HomeViewModel @Inject constructor(
 //                )
 //        }
 //    }
-    fun getCategories(token: String) = viewModelScope.launch {
-        val response = homeInteractor.getCategories(token)
+    fun getCategories(token: String, userId: String) = viewModelScope.launch {
+        val response = homeInteractor.getCategories(token, userId)
 //        val response = homeInteractor.getCategoriesLocal()
         _categories.postValue(response.data)
         Timber.i("t1 categ ${_categories.value.toString()}")

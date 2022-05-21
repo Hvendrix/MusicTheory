@@ -5,5 +5,6 @@ enum class PersonalAccountFragments {
     LOGIN,
     REGISTRATION,
     ACCOUNT,
-    ADDTEST
+    ADD_TEST,
+    ADD_QUESTION
 }

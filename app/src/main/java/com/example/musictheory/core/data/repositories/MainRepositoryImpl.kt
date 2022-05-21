@@ -24,8 +24,8 @@ class MainRepositoryImpl(
         token: String
     ) = apiHelper.getMusicTest(token)
 
-    override suspend fun getCategories(token: String)
-     = apiHelper.getCategories(token)
+    override suspend fun getCategories(token: String, userId: String)
+     = apiHelper.getCategories(token, userId)
 
     override suspend fun postSection(
         serverData: PostSection

@@ -37,7 +37,8 @@ fun getMusicTest(
 //    ): Call<ServerResponseMusicTest>
     @GET("test")
     fun getCategories(
-    @Header("Authorization") token: String
+    @Header("Authorization") token: String,
+    @Query("teacher_id") collectionName: String = ""
     ): Call<ServerResponseMusicTest>
 
     @POST("put_data/")

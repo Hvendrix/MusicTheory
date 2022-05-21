@@ -1,7 +1,7 @@
 package com.example.musictheory.core.data.database
 
 import androidx.room.TypeConverter
-import com.example.musictheory.model.Mistake
+import com.example.musictheory.core.data.model.Mistake
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

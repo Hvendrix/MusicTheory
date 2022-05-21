@@ -10,6 +10,7 @@ import com.example.musictheory.R
 import com.example.musictheory.account.data.model.ResponseLogin
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
+import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.core.presenter.ThemeManager
 import com.example.musictheory.databinding.AccountFragmentBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -48,7 +49,7 @@ class AccountFragment : Fragment() {
             null -> {
                 binding.buttonAddTestAccount.visibility = View.GONE
             }
-            "teacher" -> {
+            "teacher", "admin" -> {
                 binding.buttonAddTestAccount.visibility = View.VISIBLE
             }
             else -> {
@@ -76,7 +77,7 @@ class AccountFragment : Fragment() {
 
         binding.buttonAddTestAccount.setOnClickListener {
             personalAccountViewModel.setOid("")
-            personalAccountViewModel.setRegister(PersonalAccountFragments.ADDTEST)
+            personalAccountViewModel.setRegister(PersonalAccountFragments.ADD_TEST)
 
 //            if (activity is MainActivityCallback) {
 //                (activity as MainActivityCallback).goAddTestFragment()
@@ -91,9 +92,16 @@ class AccountFragment : Fragment() {
     }
 
     private fun signOut() {
+        personalAccountViewModel.setUser(null)
+
+        if (activity is MainActivityCallback) {
+            (activity as MainActivityCallback).setToken("")
+            (activity as MainActivityCallback).setUser(null)
+        }
+        personalAccountViewModel.setRegister(PersonalAccountFragments.LOGIN)
         try {
             mGoogleSignInClient.signOut().addOnCompleteListener {
-                personalAccountViewModel.setEmail(ResponseLogin("", "", "", "", ""))
+                personalAccountViewModel.setUser(ResponseLogin("", "", "", "", ""))
                 personalAccountViewModel.setRegister(PersonalAccountFragments.LOGIN)
 //                personalAccountViewModel.setEmail(ResponseLogin("","","","",""))
 //                personalAccountViewModel.setRegister(PersonalAccountFragments.NONE)
