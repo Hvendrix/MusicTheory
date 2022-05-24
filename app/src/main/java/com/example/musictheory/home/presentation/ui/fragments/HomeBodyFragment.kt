@@ -73,7 +73,7 @@ class HomeBodyFragment : Fragment() {
                         homeViewModel.getCategories(token, user?.userId ?: "")
                     }
                     else -> {
-                        homeViewModel.getCategories(token, "1")
+                        homeViewModel.getCategories(token, "0")
                     }
                 }
 

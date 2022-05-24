@@ -28,6 +28,9 @@ private val binding: ItemAnswerBinding) : RecyclerView.ViewHolder(binding.root) 
         if (checked && !binding.checkBox.isChecked)
             binding.checkBox.toggle()
 
+        if(!checked &&binding.checkBox.isChecked)
+            binding.checkBox.toggle()
+
         binding.checkBox.setOnCheckedChangeListener { compoundButton, b ->
             onCheckRightChangeListener.onCheckedChanged(compoundButton, b, adapterPosition)
 //        binding.buttonQuestion.text = question.questionText

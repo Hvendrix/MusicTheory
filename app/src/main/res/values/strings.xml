@@ -27,7 +27,7 @@
     <string name="personal_account_title">Личный кабинет</string>
     <string name="welcome_title">Добро пожаловать!</string>
     <string name="personal_account_back_button">Back</string>
-    <string name="web_client_id">7061348269-mkqqh70081m84sj87040j6dupbmdsa62.apps.googleusercontent.com</string>
+    <string name="web_client_id"></string>
     <string name="account">Аккаунт</string>
     <string name="TestName">Название теста</string>
     <string name="question">Вопрос</string>
@@ -36,7 +36,7 @@
     <string name="add_test">Добавить тест</string>
     <string name="change_theme">Сменить тему</string>
     <string name="add_test_navigation">Добавить тест</string>
-    <string name="delete_tests">Удалить тесты</string>
+    <string name="delete_tests">Удалить тест</string>
     <string name="teacher">Учитель</string>
     <string name="num_stars">"5"</string>
     <string name="signup_question">Нет аккаунта?</string>
@@ -46,4 +46,5 @@
     <string name="attachment_url">Ссылка на вложения</string>
     <string name="add_answer">Добавить ответ</string>
     <string name="generation_seed_str">Зерно генерации</string>
+    <string name="delete_question">Удалить вопрос</string>
 </resources>

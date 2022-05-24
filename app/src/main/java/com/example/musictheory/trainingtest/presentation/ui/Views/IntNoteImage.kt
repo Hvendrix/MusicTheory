@@ -25,15 +25,4 @@ class IntNoteImage @JvmOverloads constructor(
         posVertical = numLine
         posHorizontal = horizontalPosition
     }
-
-//    fun getAttr() : Float{
-//       return posVertical
-//    }
-
-//    fun getPosHorizontal(): String{
-//        return posHorizontal
-//    }
-
-
-
 }

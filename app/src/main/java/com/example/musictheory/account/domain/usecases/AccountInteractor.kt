@@ -32,7 +32,7 @@ class AccountInteractor(
     ) {
         var role = "student"
         if (teacher) {
-            role = "teacher"
+            role = "teacher_v"
         }
         mainRepository.postSignUp(
             PostSignUp(
@@ -58,7 +58,7 @@ class AccountInteractor(
     ) {
         var role = "student"
         if (teacher) {
-            role = "teacher"
+            role = "teacher_v"
         }
         mainRepository.postSignUpFlask(
             PostSignUpFlask(

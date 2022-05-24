@@ -242,10 +242,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     fun defineChord(chord: String): Pair<String, String>{
-        return when(chord.lowercase()){
-            "трезвучие" -> Pair("терция", "терция")
-            "секстаккорд" ->Pair("терция", "кварта")
-            "квартсекстаккорд" ->Pair("кварта", "терция")
+        return when(chord.lowercase().trim()){
+            "трезвучие", "53" -> Pair("терция", "терция")
+            "секстаккорд", "6"->Pair("терция", "кварта")
+            "квартсекстаккорд", "64"->Pair("кварта", "терция")
             else -> {
 
                 Timber.i("t1 не тот аккорд $chord")

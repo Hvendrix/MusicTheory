@@ -93,12 +93,6 @@ class TrainingTestFragment : Fragment() {
                             }
                             trainingTestViewModel.getData(tests.await())
                         }
-//                        if (it.isNotEmpty()) {
-//                            lifecycleScope.launch {
-//                                val tests = async { trainingTestViewModel.getTests() }
-//                                trainingTestViewModel.getData(tests.await())
-//                            }
-//                        }
                     }
                 }
                 launch {
@@ -114,7 +108,7 @@ class TrainingTestFragment : Fragment() {
         return binding.root
     }
 
-    fun changeUiType(){
+    private fun changeUiType(){
             var nextBodyFragment: Fragment? = null
             when (trainingTestViewModel.uiType.value) {
                 "none" -> {

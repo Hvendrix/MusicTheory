@@ -161,6 +161,11 @@ class AddTestFragment : Fragment(), OnItemQuestionClickListener {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     personalAccountViewModel.currentMusicOid.collect {
+                        if (!it.isNullOrBlank()) {
+                            binding.buttonAddTestAccount.text = "Обновить тест"
+                        } else{
+                            binding.buttonAddTestAccount.text = "Добавить тест"
+                        }
                         if (personalAccountViewModel.musicTest.value.questionArray.isNullOrEmpty()) {
                             Timber.i("t1 collect")
                             lifecycleScope.launch {
