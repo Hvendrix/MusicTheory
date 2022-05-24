@@ -1,13 +1,10 @@
 package com.example.musictheory.core.data.repositories
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.domain.api.ApiHelper
 import com.example.musictheory.core.domain.repository.MainRepository
-import com.example.musictheory.home.homeModel.PostSection
+import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import retrofit2.Call
 
@@ -24,16 +21,25 @@ class MainRepositoryImpl(
     ) = apiHelper.getCollectionByName(collectionName)
 
     override suspend fun getMusicTest(
-        collectionName: String
-    ) = apiHelper.getMusicTest(collectionName)
+        token: String
+    ) = apiHelper.getMusicTest(token)
+
+    override suspend fun getCategories(token: String, userId: String)
+     = apiHelper.getCategories(token, userId)
 
     override suspend fun postSection(
         serverData: PostSection
     ) = apiHelper.postSection(serverData)
 
     override suspend fun postTest(
-        postMusicTest: PostMusicTest
-    ): Call<PostMusicTest> = apiHelper.postTest(postMusicTest)
+        token: String,
+        postMusicTest: MusicTestWithoutId
+    ): Call<AnswerResult> = apiHelper.postTest(token, postMusicTest)
+
+    override suspend fun postTest(
+        token: String,
+        postMusicTest: PostEditMusicTest
+    ): Call<AnswerResult> = apiHelper.postTest(token, postMusicTest)
 
     override suspend fun postResult(
         postResult: PostResult
@@ -50,4 +56,14 @@ class MainRepositoryImpl(
     override suspend fun postLogin(
         postLogin: PostLogin
     ): Call<ResponseLogin> = apiHelper.postLogin(postLogin)
+
+
+
+    override suspend fun postSignUpFlask(
+        postSignUpFlask: PostSignUpFlask
+    ): Call<ResponseToken> = apiHelper.postSignUpFlask(postSignUpFlask)
+
+    override suspend fun postLoginFlask(postLoginFlask: PostLoginFlask): Call<ResponseToken> = apiHelper.postLoginFlask(postLoginFlask)
+    override suspend fun getUserFlask(token: String): Call<ResponseUser> = apiHelper.getUserFlask(token)
+
 }

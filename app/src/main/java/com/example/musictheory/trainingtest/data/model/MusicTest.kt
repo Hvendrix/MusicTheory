@@ -1,6 +1,6 @@
 package com.example.musictheory.trainingtest.data.model
 
-import com.example.musictheory.home.homeModel.Id
+import com.example.musictheory.home.presentation.model.Id
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -8,15 +8,17 @@ import com.google.gson.annotations.SerializedName
  */
 data class MusicTest(
     @SerializedName("_id")
-    val id: Id,
-    @SerializedName("sections_id")
-    val sectionsId: String,
+    val id: Id = Id(""),
+    @SerializedName("name")
+    val testName: String = "",
     @SerializedName("question_array")
-    val questionArray: List<String>,
-    @SerializedName("answer_array")
-    val answerArray: List<List<String>>,
-    @SerializedName("dislpayed_elemets")
-    val displayedElements: List<String>,
-    @SerializedName("test_name")
-    val testName: String
+    val questionArray: MutableList<Question> = mutableListOf(),
+    @SerializedName("section")
+    val sectionsId: List<String> = listOf(),
+    @SerializedName("teacher_id")
+    val teacherId: String ="",
+    @SerializedName("test_id")
+    val test_id: String =""
+
+
 )

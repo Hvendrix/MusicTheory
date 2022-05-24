@@ -2,6 +2,7 @@ package com.example.musictheory.core.modules
 
 import com.example.musictheory.account.domain.usecases.AccountInteractor
 import com.example.musictheory.core.domain.repository.MainRepository
+import com.example.musictheory.home.domain.usecases.HomeInteractor
 import com.example.musictheory.trainingtest.domain.usecases.TrainingTestInteractor
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,12 @@ class InteractorModule @Inject constructor() {
     fun provideTrainingTestInteractor(
         mainRepository: MainRepository
     ): TrainingTestInteractor = TrainingTestInteractor(mainRepository)
+
+    @Provides
+    @Singleton
+    fun provideHomeInteractor(
+        mainRepository: MainRepository
+    ): HomeInteractor = HomeInteractor(mainRepository)
 
     @Provides
     @Singleton

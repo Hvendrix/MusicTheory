@@ -19,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.musictheory.R
 import com.example.musictheory.account.loginScreen.PersonalAccountFragments
 import com.example.musictheory.account.presenter.viewmodels.PersonalAccountViewModel
+import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.databinding.FragmentStudentRegistrationBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -83,21 +84,31 @@ class StudentRegistrationFragment : Fragment() {
         val account = GoogleSignIn.getLastSignedInAccount(context)
 
         if (account != null && account.idToken != null && account.email != null) {
-            postSignUpToServer(
-                account.idToken,
-                account.email,
-                binding.checkboxTeacher.isChecked,
-                ""
-            )
+//            postSignUpToServer(
+//                account.idToken,
+//                account.email,
+//                binding.checkboxTeacher.isChecked,
+//                ""
+//            )
         }
 //        updateUI(account)
 
         binding.signInButton.setOnClickListener {
             signIn()
         }
+
+        binding.loginButton.setOnClickListener {
+            personalAccountViewModel.setRegister(PersonalAccountFragments.LOGIN)
+        }
+
         binding.registerButton.setOnClickListener {
-            postSignUpToServer(
-                binding.loginEt.text.toString().trim(),
+//            postSignUpToServer(
+//                binding.loginEt.text.toString().trim(),
+//                binding.loginEt.text.toString().trim(),
+//                binding.checkboxTeacher.isChecked,
+//                binding.passwordEt.text.toString()
+//            )
+            postSignUpFlaskToServer(
                 binding.loginEt.text.toString().trim(),
                 binding.checkboxTeacher.isChecked,
                 binding.passwordEt.text.toString()
@@ -107,11 +118,12 @@ class StudentRegistrationFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    personalAccountViewModel.email.collect {
-                        if (it != null && it.name.isNotEmpty() && it.role.isNotEmpty()) {
-//                            if (activity is MainActivityCallback) {
-//                                (activity as MainActivityCallback).goAccount(it.name, it.role)
-//                            }
+                    personalAccountViewModel.user.collect {
+                        if (it != null && it.login.isNotEmpty() && it.role.isNotEmpty()) {
+                            personalAccountViewModel.setRegister(PersonalAccountFragments.ACCOUNT)
+                            if (activity is MainActivityCallback) {
+                                (activity as MainActivityCallback).setUser(it)
+                            }
                         }
 //                        binding.loginEt.setText(it)
 //                        try {
@@ -145,7 +157,7 @@ class StudentRegistrationFragment : Fragment() {
                     personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
                 }
                 !signUpResponseAwait.name.isNullOrEmpty() -> {
-                    personalAccountViewModel.setEmail(signUpResponseAwait)
+                    personalAccountViewModel.setUser(signUpResponseAwait)
                 }
                 else -> {
                     Toast.makeText(
@@ -166,7 +178,7 @@ class StudentRegistrationFragment : Fragment() {
                         }
                         responseLoginAwait.name.isNotEmpty() -> {
                             personalAccountViewModel
-                                .setEmail(responseLoginAwait)
+                                .setUser(responseLoginAwait)
                         }
                         else -> {
                             Toast.makeText(
@@ -178,6 +190,71 @@ class StudentRegistrationFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+
+    private fun postSignUpFlaskToServer(email: String, teacher: Boolean, pass: String) {
+        lifecycleScope.launch {
+            val signUpResponse = async {
+                personalAccountViewModel.postSignUpFlask(email, teacher, pass)
+            }
+//            x.await().body()?.let { it1 -> personalAccountViewModel.setEmail(it1) }
+            val signUpResponseAwait = signUpResponse.await().body()
+            if (activity is MainActivityCallback) {
+                (activity as MainActivityCallback).setToken(signUpResponseAwait ?.token?: "")
+                val responseUser = async {
+//                if(signUpResponseAwait!=null)
+//                personalAccountViewModel.getUserFlask("Bearer " + signUpResponseAwait?.token ?: "")
+                    personalAccountViewModel.getUserFlask( (activity as MainActivityCallback).getToken())
+                }
+                val responseUserAwait = responseUser.await().body()?.data
+                when {
+                    responseUserAwait == null -> {
+                        Toast.makeText(
+                            context,
+                            "Пользователь уже существует",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        personalAccountViewModel.setRegister(PersonalAccountFragments.REGISTRATION)
+                    }
+                    !responseUserAwait.login.isNullOrEmpty() -> {
+                        personalAccountViewModel.setUser(responseUserAwait)
+                    }
+                    else -> {
+                        Toast.makeText(
+                            context,
+                            "${signUpResponseAwait?.result}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+//                    val responseLogin = async {
+//                        personalAccountViewModel.postLogin(token, pass)
+//                    }
+//                    val responseLoginAwait = responseLogin.await().body()
+//                    when {
+//                        responseLoginAwait == null -> {
+//                            personalAccountViewModel.setRegister(
+//                                PersonalAccountFragments.REGISTRATION
+//                            )
+//                        }
+//                        responseLoginAwait.name.isNotEmpty() -> {
+//                            personalAccountViewModel
+//                                .setEmail(responseLoginAwait)
+//                        }
+//                        else -> {
+//                            Toast.makeText(
+//                                context,
+//                                "Что-то пошло не так",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -199,8 +276,17 @@ class StudentRegistrationFragment : Fragment() {
             val account = completedTask.getResult(ApiException::class.java)
             val idToken = account.idToken
 
+            if (account != null && account.idToken != null && account.email != null) {
+//                postSignUpToServer(
+//                    account.idToken,
+//                    account.email,
+//                    binding.checkboxTeacher.isChecked,
+//                    ""
+//                )
+            }
+
             // Signed in successfully, show authenticated UI.
-            updateUI(account)
+//            updateUI(account)
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

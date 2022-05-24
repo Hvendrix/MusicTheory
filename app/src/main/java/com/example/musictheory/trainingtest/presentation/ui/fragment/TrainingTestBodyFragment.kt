@@ -16,11 +16,7 @@ import com.example.musictheory.trainingtest.presentation.ui.viewmodel.TrainingTe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TrainingTestBodyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 @AndroidEntryPoint
 class TrainingTestBodyFragment : Fragment(), OnItemClickListener {
 

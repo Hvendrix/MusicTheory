@@ -10,4 +10,11 @@ object ExecutorBuildType {
             .Builder()
             .build()
     }
+
+    fun mockUserDataFieldLogin(): String{
+        return ""
+    }
+    fun mockUserDataFieldPass(): String{
+        return "test"
+    }
 }

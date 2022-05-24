@@ -3,6 +3,7 @@ package com.example.musictheory
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
@@ -10,6 +11,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.musictheory.account.data.model.UserFlask
+import com.example.musictheory.account.presenter.fragments.AddQuestionFragment
 import com.example.musictheory.core.data.MainActivityCallback
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.core.presenter.ThemeManager
@@ -20,6 +23,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityCallback {
@@ -41,6 +46,9 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
 //    @Inject
 //    lateinit var dataStoreMusicEducation: DataStoreMusicEducation
 
+    private val viewModel: MainActivityViewModel
+            by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode())
@@ -60,6 +68,8 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
         val view = binding.root
         setContentView(view)
 
+
+
         _navView = findViewById(R.id.nav_view)
         _navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -69,7 +79,6 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
                 R.id.nested_navigation_home,
                 R.id.navigation_dashboard,
                 R.id.navigation_notifications,
-                R.id.action_global_nested_navigation_training_test,
                 R.id.action_global_nested_personal_account
             )
         )
@@ -78,7 +87,7 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
     }
 
     private suspend fun showDataFromServer(
-        serverResponse: ServerResponse
+        serverResponse: ServerResponse,
     ) = withContext(Dispatchers.Main) {
         Toast.makeText(
             this@MainActivity,
@@ -114,6 +123,14 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
         navController.navigate(R.id.action_accountFragment_to_addTestFragment)
     }
 
+    override fun goAddTestFragment(id: String) {
+        val bundle = Bundle()
+        bundle.putString(Companion.testId, id)
+        navController.navigate(R.id.action_global_nested_personal_account, bundle)
+
+//        navController.navigate(R.id.action_accountFragment_to_addTestFragment)
+    }
+
     private fun toggleTheme(isDark: Boolean): Boolean {
         val mode = when (isDark) {
             true -> LIGHT_MODE
@@ -130,14 +147,37 @@ class MainActivity : AppCompatActivity(), MainActivityCallback {
 //        bundle.putString("role", role)
 //        Timber.v("t1 email " + email)
 //        navController.navigate(R.id.action_studentPersonalAccountLoginFragment_to_accountFragment, bundle)
-        navController.navigate(
-            R.id.action_studentPersonalAccountLoginFragment_to_accountFragment
-//            bundle
-        )
+//        navController.navigate(
+//            R.id.action_studentPersonalAccountLoginFragment_to_accountFragment
+// //            bundle
+//        )
+        navController.navigate(R.id.accountFragment)
+    }
+
+
+    override fun setToken(token: String) {
+        viewModel.setToken(token)
+    }
+
+    override fun getToken(): String {
+        return viewModel.token.value
+    }
+
+    override fun setUser(user: UserFlask?) {
+       viewModel.setUser(user)
+    }
+
+    override fun getUser(): UserFlask? {
+        return viewModel.user.value
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _navView = null
+    }
+
+    companion object {
+        const val testId = "TEST_ID"
+        const val addQuestion = "ADD_QUESTION"
     }
 }

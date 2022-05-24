@@ -10,13 +10,14 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/personal_account_title"
+            android:text="@string/welcome_title"
             android:textAppearance="?attr/textAppearanceHeadline2"
             android:textColor="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageView
             android:layout_width="match_parent"
@@ -26,8 +27,9 @@
             app:layout_constraintBottom_toBottomOf="@id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/imageView" />
-
+            android:id="@+id/imageView"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
             android:layout_width="wrap_content"
@@ -36,7 +38,8 @@
             app:layout_constraintTop_toTopOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
-            app:layout_constraintEnd_toStartOf="@+id/text_view_account_email" />
+            android:id="@+id/imageView2"
+            android:layout_marginStart="60dp" />
 
     <TextView
             android:id="@+id/text_view_account_name"
@@ -46,14 +49,14 @@
             android:textAppearance="@style/TextAppearance.MusicTheory.Subtitle1"
             android:textColor="?attr/windowBackground"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:text="логин"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintBottom_toTopOf="@+id/text_view_account_email" />
+            app:layout_constraintBottom_toTopOf="@+id/text_view_account_email"
+            app:layout_constraintStart_toEndOf="@+id/imageView2" />
 
     <TextView
             android:id="@+id/text_view_account_email"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MusicTheory.Subtitle1"

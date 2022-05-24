@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="75dp">
 
-    <TextView
-            android:textAppearance="@style/CategoryCardText"
+    <Button
+
+
+
             android:id="@+id/category_title"
             android:text="@string/category_title"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="?attr/colorSecondary"
-            android:textColor="?attr/colorOnSecondary"
+            android:backgroundTint="?attr/colorSecondary"
+            app:shapeAppearance="?attr/roundedButton"
+            android:layout_marginStart="@dimen/buttons_start_and_end_margin"
+            android:textAppearance="@style/CategoryCardText"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/img_edit"
+
+
+
+            />
+
+    <ImageView
+            android:id="@+id/img_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/ic_edit"
+            app:layout_constraintStart_toEndOf="@id/category_title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.0" />
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

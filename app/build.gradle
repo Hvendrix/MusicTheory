@@ -19,7 +19,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_URL', "\"https://music--education.herokuapp.com/api/\""
+//        buildConfigField 'String', 'BASE_URL', "\"https://music--education.herokuapp.com/api/\""
+        buildConfigField 'String', 'BASE_URL', "\"http://51.250.106.235:8000/api/\""
     }
 
     /**
@@ -108,5 +109,10 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.4.0"
 
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
+
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
 }

@@ -28,6 +28,6 @@
     <dimen name="register_button_login_fragment_height">50dp</dimen>
     <dimen name="register_button_login_fragment_width">150dp</dimen>
     <dimen name="edit_text_width_login_fragment">225dp</dimen>
-    <dimen name="buttons_start_and_end_margin">40dp</dimen>
+    <dimen name="buttons_start_and_end_margin">20dp</dimen>
 
 </resources>

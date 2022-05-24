@@ -1,14 +1,11 @@
 package com.example.musictheory.core.data.api
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
 import com.example.musictheory.core.domain.api.ApiHelper
-import com.example.musictheory.home.homeModel.PostSection
-import com.example.musictheory.home.homeModel.SectionsCollection
+import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.home.presentation.model.SectionsCollection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -22,16 +19,24 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
         return apiService.getCollectionByName("tests")
     }
 
-    override suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest> {
-        return apiService.getMusicTest("tests")
+    override suspend fun getMusicTest(token: String): Call<ServerResponseMusicTest> {
+        return apiService.getMusicTest(token)
+    }
+
+    override suspend fun getCategories(token: String, userId: String): Call<ServerResponseMusicTest> {
+        return apiService.getCategories(token, userId)
     }
 
     override suspend fun postSection(serverData: PostSection): Call<SectionsCollection> {
         return apiService.postSection(serverData)
     }
 
-    override suspend fun postTest(postMusicTest: PostMusicTest): Call<PostMusicTest> {
-        return apiService.postTest(postMusicTest)
+    override suspend fun postTest(token: String, postMusicTest: MusicTestWithoutId): Call<AnswerResult> {
+        return apiService.postTest(token, postMusicTest)
+    }
+
+    override suspend fun postTest(token: String, postMusicTest: PostEditMusicTest): Call<AnswerResult> {
+        return apiService.postTest(token, postMusicTest)
     }
 
     override suspend fun postResult(postResult: PostResult): Call<PostResult> {
@@ -48,5 +53,17 @@ class ApiHelperImpl(private val apiService: MusicEducationApiService) : ApiHelpe
 
     override suspend fun postLogin(postLogin: PostLogin): Call<ResponseLogin> {
         return apiService.postLogin(postLogin)
+    }
+
+    override suspend fun postSignUpFlask(postSignUpFlask: PostSignUpFlask): Call<ResponseToken> {
+        return apiService.postSignUpFlask(postSignUpFlask)
+    }
+
+    override suspend fun postLoginFlask(postLoginFlask: PostLoginFlask): Call<ResponseToken> {
+        return apiService.postLoginFlask(postLoginFlask)
+    }
+
+    override suspend fun getUserFlask(token: String): Call<ResponseUser> {
+        return apiService.getUserFlask(token)
     }
 }

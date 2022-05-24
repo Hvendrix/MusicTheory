@@ -22,6 +22,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @AndroidEntryPoint
 class TrainingTestFragment : Fragment() {
@@ -40,34 +41,35 @@ class TrainingTestFragment : Fragment() {
 
         initNestedFragments()
 
+
         // Вызов запроса к серверу через view model
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     trainingTestViewModel.goNextEvent.collect {
-                        if (it) {
-                            var nextBodyFragment: Fragment? = null
-                            when (trainingTestViewModel.displayedElements.value) {
-                                "none" -> {
-                                    nextBodyFragment =
-                                        TrainingTestBodyWithStaveFragment()
-                                }
-                                "stave" -> {
-                                    nextBodyFragment =
-                                        TrainingTestBodyWithStaveFragment()
-                                }
-                            }
-                            if (nextBodyFragment != null) {
-                                childFragmentManager.commit {
-                                    disallowAddToBackStack()
-                                    replace(
-                                        R.id.bodyTrainingTest,
-                                        nextBodyFragment
-                                    )
-                                }
-                            }
-                        }
+//                        if (it) {
+//                            var nextBodyFragment: Fragment? = null
+//                            when (trainingTestViewModel.uiType.value) {
+//                                "none" -> {
+//                                    nextBodyFragment =
+//                                        TrainingTestBodyWithStaveFragment()
+//                                }
+//                                "stave" -> {
+//                                    nextBodyFragment =
+//                                        TrainingTestBodyWithStaveFragment()
+//                                }
+//                            }
+//                            if (nextBodyFragment != null) {
+//                                childFragmentManager.commit {
+//                                    disallowAddToBackStack()
+//                                    replace(
+//                                        R.id.bodyTrainingTest,
+//                                        nextBodyFragment
+//                                    )
+//                                }
+//                            }
+//                        }
                     }
                 }
                 launch {
@@ -81,12 +83,21 @@ class TrainingTestFragment : Fragment() {
                 }
                 launch {
                     trainingTestViewModel.currentQuestionOid.collect {
-                        if (it.isNotEmpty()) {
-                            lifecycleScope.launch {
-                                val tests = async { trainingTestViewModel.getTests() }
-                                trainingTestViewModel.getData(tests.await())
+                        lifecycleScope.launch {
+                            val tests = async {
+                                var token = ""
+                                if (activity is MainActivityCallback) {
+                                    token = (activity as MainActivityCallback).getToken()
+                                }
+                                trainingTestViewModel.getTests(token)
                             }
+                            trainingTestViewModel.getData(tests.await())
                         }
+                    }
+                }
+                launch {
+                    trainingTestViewModel.uiType.collect {
+                        changeUiType()
                     }
                 }
             }
@@ -97,6 +108,38 @@ class TrainingTestFragment : Fragment() {
         return binding.root
     }
 
+    private fun changeUiType(){
+            var nextBodyFragment: Fragment? = null
+            when (trainingTestViewModel.uiType.value) {
+                "none" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyFragment()
+                }
+                "stave" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyWithStaveFragment()
+                }
+                "stave random pick" -> {
+                    nextBodyFragment =
+                        TrainingTestBodyWithStaveFragment()
+                }
+                "picture" ->{
+                    Timber.i("t1 picture fragment")
+                    nextBodyFragment =
+                        TrainingTestBodyWithImagePicture()
+                }
+            }
+            if (nextBodyFragment != null) {
+                childFragmentManager.commit {
+                    disallowAddToBackStack()
+                    replace(
+                        R.id.bodyTrainingTest,
+                        nextBodyFragment
+                    )
+                }
+            }
+    }
+
     private fun initNestedFragments() {
         val trainingTestHeaderFragment = TrainingTestHeaderFragment()
         childFragmentManager.beginTransaction().apply {
@@ -104,11 +147,17 @@ class TrainingTestFragment : Fragment() {
             commit()
         }
 
-        val trainingTestBodyFragment = TrainingTestBodyFragment()
-        childFragmentManager.beginTransaction().apply {
-            add(R.id.bodyTrainingTest, trainingTestBodyFragment)
-            commit()
-        }
+//        val trainingTestBodyFragment = TrainingTestBodyFragment()
+//        childFragmentManager.beginTransaction().apply {
+//            add(R.id.bodyTrainingTest, trainingTestBodyFragment)
+//            commit()
+//        }
+
+//        val trainingTestBodyWithStaveFragment = TrainingTestBodyWithStaveFragment()
+//        childFragmentManager.beginTransaction().apply {
+//            add(R.id.bodyTrainingTest, trainingTestBodyWithStaveFragment)
+//            commit()
+//        }
 
         val trainingFragmentFooterFragment = TrainingTestFooterFragment()
         childFragmentManager.beginTransaction().apply {

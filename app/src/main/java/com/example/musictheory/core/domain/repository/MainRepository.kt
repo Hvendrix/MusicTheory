@@ -1,13 +1,10 @@
 package com.example.musictheory.core.domain.repository
 
-import com.example.musictheory.account.data.model.PostDeleteTest
-import com.example.musictheory.account.data.model.PostLogin
-import com.example.musictheory.account.data.model.PostMusicTest
-import com.example.musictheory.account.data.model.PostSignUp
-import com.example.musictheory.account.data.model.ResponseLogin
+import com.example.musictheory.account.data.model.*
 import com.example.musictheory.core.data.model.ServerResponse
-import com.example.musictheory.home.homeModel.PostSection
-import com.example.musictheory.home.homeModel.SectionsCollection
+import com.example.musictheory.home.presentation.model.PostSection
+import com.example.musictheory.home.presentation.model.SectionsCollection
+import com.example.musictheory.trainingtest.data.model.AnswerResult
 import com.example.musictheory.trainingtest.data.model.PostResult
 import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
 import retrofit2.Call
@@ -21,13 +18,21 @@ interface MainRepository {
 
     suspend fun getMusicTest(collectionName: String): Call<ServerResponseMusicTest>
 
+    suspend fun getCategories(token: String, userId:String): Call<ServerResponseMusicTest>
+
     suspend fun postSection(
         serverData: PostSection
     ): Call<SectionsCollection>
 
     suspend fun postTest(
-        postMusicTest: PostMusicTest
-    ): Call<PostMusicTest>
+        token: String,
+        postMusicTest: MusicTestWithoutId
+    ): Call<AnswerResult>
+
+    suspend fun postTest(
+        token: String,
+        postMusicTest: PostEditMusicTest
+    ): Call<AnswerResult>
 
     suspend fun postResult(
         postResult: PostResult
@@ -44,4 +49,18 @@ interface MainRepository {
     suspend fun postLogin(
         postLogin: PostLogin
     ): Call<ResponseLogin>
+
+
+    suspend fun postSignUpFlask(
+        postSignUpFlask: PostSignUpFlask
+    ): Call<ResponseToken>
+
+    suspend fun postLoginFlask(
+        postLoginFlask: PostLoginFlask
+    ): Call<ResponseToken>
+
+    suspend fun getUserFlask(
+        token: String
+    ): Call<ResponseUser>
+
 }

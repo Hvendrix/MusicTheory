@@ -3,11 +3,9 @@ package com.example.musictheory.trainingtest.presentation.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musictheory.core.data.Repository
-import com.example.musictheory.home.homeModel.Id
-import com.example.musictheory.model.Result
-import com.example.musictheory.trainingtest.data.model.MusicTest
-import com.example.musictheory.trainingtest.data.model.MusicTestEntity
-import com.example.musictheory.trainingtest.data.model.ServerResponseMusicTest
+import com.example.musictheory.core.data.model.Result
+import com.example.musictheory.trainingtest.data.model.*
+import com.example.musictheory.trainingtest.data.model.notes.WhiteNotes
 import com.example.musictheory.trainingtest.domain.usecases.TrainingTestInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @HiltViewModel
 class TrainingTestViewModel @Inject constructor(private val repository: Repository) :
@@ -39,7 +38,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     val currentQuestionOid: StateFlow<String> = _currentQuestionOid.asStateFlow()
 
     private val _serverResponseCollectionList = MutableStateFlow<List<MusicTest>>(
-        listOf(MusicTest(Id(""), "", listOf(), listOf(), listOf(), ""))
+        listOf(MusicTest())
     )
 
 //    val serverResponseCollectionList:
@@ -47,10 +46,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 //            = _serverResponseCollectionList.asStateFlow()
 
     private val _serverResponseCollection = MutableStateFlow<MusicTest>(
-        MusicTest(Id(""), "", listOf(), listOf(), listOf(), "")
+        MusicTest()
     )
     val serverResponseCollection:
-        StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
+            StateFlow<MusicTest> = _serverResponseCollection.asStateFlow()
 
     private val _questionString = MutableStateFlow("Вопрос")
     val questionString: StateFlow<String> = _questionString.asStateFlow()
@@ -60,8 +59,20 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     )
     val answersList: StateFlow<List<String>> = _answersList.asStateFlow()
 
-    private val _displayedElements = MutableStateFlow("none")
-    val displayedElements: StateFlow<String> = _displayedElements.asStateFlow()
+    private val _uiType = MutableStateFlow("none")
+    val uiType: StateFlow<String> = _uiType.asStateFlow()
+
+
+    private val _displayedElements: MutableStateFlow<List<DisplayedElement>> =
+        MutableStateFlow(listOf())
+    val displayedElements: StateFlow<List<DisplayedElement>> = _displayedElements.asStateFlow()
+
+    private val _imageAttachmentUrl: MutableStateFlow<String> =
+        MutableStateFlow("")
+    val imageAttachmentUrl = _imageAttachmentUrl.asStateFlow()
+
+    private val _generationSeed: MutableStateFlow<Map<Any, Any>> = MutableStateFlow(mapOf())
+    val generationSeed: StateFlow<Map<Any, Any>> = _generationSeed.asStateFlow()
 
     private val _goNextEvent = MutableStateFlow<Boolean>(false)
     val goNextEvent: StateFlow<Boolean> = _goNextEvent.asStateFlow()
@@ -79,7 +90,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         mutableListOf()
     )
     val currentMistakeList:
-        StateFlow<MutableList<List<String>>> = _currentMistakeList.asStateFlow()
+            StateFlow<MutableList<List<String>>> = _currentMistakeList.asStateFlow()
 
     /**
      * Получаем данные через интерактор
@@ -89,8 +100,10 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _currentQuestionOid.value = oid
     }
 
-    suspend fun getTests(): ServerResponseMusicTest {
-        return trainingTestInteractor.getTests()
+    suspend fun getTests(token: String): ServerResponseMusicTest {
+//        _currentQuestionOid.value = "1"
+        return trainingTestInteractor.getTests(token)
+//        return trainingTestInteractor.getLocalTests2()
     }
 
     suspend fun postTest() {
@@ -99,26 +112,196 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     }
 
     fun getData(serverResponse: ServerResponseMusicTest) {
-        _serverResponseCollection.value = serverResponse.data.collection[0]
-        _serverResponseCollectionList.value = serverResponse.data.collection
+        _serverResponseCollection.value = serverResponse.data[0]
+        _serverResponseCollectionList.value = serverResponse.data
         _serverResponseCollectionList.value.forEach {
-            if (it.sectionsId == currentQuestionOid.value) {
+            if (it.id.oid == currentQuestionOid.value) {
                 _serverResponseCollection.value = it
             }
         }
         _currentRightAnswer.value = _serverResponseCollection
-            .value.answerArray[_currentQuestionNum.value][0]
+            .value.questionArray[_currentQuestionNum.value].answerArray[0]
 
         _answersList.value = _serverResponseCollection
-            .value.answerArray[_currentQuestionNum.value].shuffled()
+            .value.questionArray[_currentQuestionNum.value].answerArray.shuffled()
+
+
+        _uiType.value = _serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].uiType
+
 
         _questionString.value = _serverResponseCollection
-            .value.questionArray[_currentQuestionNum.value]
+            .value.questionArray[_currentQuestionNum.value].questionText
+
+
+        _generationSeed.value = _serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].generationSeed
+
+
+        _displayedElements.value = defineDisplayedElements(_serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].displayedElements)
+
+        _imageAttachmentUrl.value =_serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].attachmentUrl
 
         _currentMistakeList.value = mutableListOf()
 
+//        when(_uiType.value){
+//            "stave random pick" ->  randomPick()
+//        }
+        Timber.i("t1 ${_serverResponseCollection.value}")
+        when (_generationSeed.value.get(GenerationSeed.notes.name)) {
+            "from_answers" -> randomPick()
+            "from_answers_double_stops" -> randomPickDoubleStops()
+            "from_answers_chords" -> randomPickChord()
+        }
+
+
 //        _answersList.value = serverResponse.data.collection[0].answerArray[0]
 //        _questionString.emit(serverResponse.data.collection[0].questionArray[0])
+    }
+
+    fun randomPickChord() {
+//        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+//        _displayedElements.value = defineDisplayedElementsDoubleStops(defineChord(_currentRightAnswer.value))
+        while (_displayedElements.value.isNullOrEmpty()) {
+            _currentRightAnswer.value = _answersList.value.shuffled()[0]
+            _displayedElements.value = defineDisplayedElementsDoubleStops(defineChord(_currentRightAnswer.value))
+            Timber.i("t1 disp ${_displayedElements.value.toString()}")
+        }
+    }
+
+    fun randomPick() {
+        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+        _displayedElements.value = defineDisplayedElements2(listOf(_currentRightAnswer.value))
+        Timber.i("t1 displayed random ${_displayedElements.value}")
+    }
+
+    fun randomPickDoubleStops() {
+//        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+//        _displayedElements.value = defineDisplayedElementsDoubleStops(_currentRightAnswer.value)
+        while (_displayedElements.value.isNullOrEmpty()) {
+            _currentRightAnswer.value = _answersList.value.shuffled()[0]
+            _displayedElements.value = defineDisplayedElementsDoubleStops(_currentRightAnswer.value)
+            Timber.i("t1 disp ${_displayedElements.value.toString()}")
+        }
+    }
+
+    fun defineDisplayedElementsDoubleStops(pair: Pair<String, String>): List<DisplayedElement> {
+        var result = mutableListOf<DisplayedElement>()
+        val lower = WhiteNotes.values().toList().shuffled().first()
+        Timber.v(" $lower ${lower.ordinal}")
+        val pair2 = Pair("секунда", "секунда")
+        val lowerPosition = defineVertPositionFromEnums(lower)
+        val middlePosition = lowerPosition + defineDoubleStops(pair.first)
+        val upperPosition = middlePosition + defineDoubleStops(pair.second)
+        val upperPosition2 = upperPosition + defineDoubleStops(pair.second)
+//        val middlePosition = lowerPosition + 1f
+//        val upperPosition = middlePosition + 1f
+
+        if (upperPosition > 5.5f) {
+            return result
+        }
+        Timber.v("t1 postions $lowerPosition  $middlePosition $upperPosition")
+//        result.add(DisplayedElement(lowerPosition, horizontalPosition = "double_stops"))
+//        result.add(DisplayedElement(middlePosition, horizontalPosition = "double_stops"))
+//        result.add(DisplayedElement(upperPosition))
+        result.add(DisplayedElement(lowerPosition))
+        result.add(DisplayedElement(middlePosition))
+        result.add(DisplayedElement(upperPosition))
+//        result.add(DisplayedElement(upperPosition2))
+        return result
+    }
+
+    fun defineDisplayedElementsDoubleStops(doubleStops: String): List<DisplayedElement> {
+        var result = mutableListOf<DisplayedElement>()
+        val lower = WhiteNotes.values().toList().shuffled().first()
+        Timber.v(" $lower ${lower.ordinal}")
+        val lowerPosition = defineVertPositionFromEnums(lower)
+        val upperPosition = lowerPosition + defineDoubleStops(doubleStops)
+
+        if (upperPosition > 5.5f) {
+            return result
+        }
+        Timber.v("t1 postions $lowerPosition  $upperPosition")
+        result.add(DisplayedElement(lowerPosition, horizontalPosition = "double_stops"))
+        result.add(DisplayedElement(upperPosition))
+        return result
+    }
+
+    fun defineVertPositionFromEnums(whiteNotes: WhiteNotes): Float {
+        return when (whiteNotes) {
+            WhiteNotes.C -> 3.5f
+            WhiteNotes.D -> 4f
+            WhiteNotes.E -> 1f
+            WhiteNotes.F -> 1.5f
+            WhiteNotes.G -> 2f
+            WhiteNotes.A -> 2.5f
+            WhiteNotes.H -> 3f
+        }
+    }
+
+    fun defineChord(chord: String): Pair<String, String>{
+        return when(chord.lowercase().trim()){
+            "трезвучие", "53" -> Pair("терция", "терция")
+            "секстаккорд", "6"->Pair("терция", "кварта")
+            "квартсекстаккорд", "64"->Pair("кварта", "терция")
+            else -> {
+
+                Timber.i("t1 не тот аккорд $chord")
+                Pair("терция", "терция")}
+        }
+    }
+
+    fun defineDoubleStops(doubleStops: String): Float {
+        return when (doubleStops.lowercase()) {
+            "секунда" -> 0.5f
+            "терция" -> 1f
+            "кварта" -> 1.5f
+            "квинта" -> 2f
+            "секста" -> 2.5f
+            "септима" -> 3f
+            "октава" -> 3.5f
+            else -> 0.5f
+        }
+    }
+
+    fun defineDisplayedElements2(noteList: List<String>): List<DisplayedElement> {
+        var result = mutableListOf<DisplayedElement>()
+        noteList.forEach {
+//            var noteName = it.get("nota")
+            result.add(when (it.lowercase()) {
+                "ми" -> DisplayedElement(1f)
+                "фа" -> DisplayedElement(1.5f)
+                "соль" -> DisplayedElement(2f)
+                "ля" -> DisplayedElement(2.5f)
+                "си" -> DisplayedElement(3f)
+                "до2" -> DisplayedElement(3.5f)
+                "ре2" -> DisplayedElement(4f)
+                "до" -> DisplayedElement(3.5f)
+                "ре" -> DisplayedElement(4f)
+                else -> DisplayedElement()
+            })
+        }
+        return result
+    }
+
+    fun defineDisplayedElements(noteList: List<Map<String, String>>): List<DisplayedElement> {
+        var result = mutableListOf<DisplayedElement>()
+        noteList.forEach {
+            var noteName = it.get("nota")
+            result.add(when (noteName?.lowercase()) {
+                "ми" -> DisplayedElement(1f)
+                "фа" -> DisplayedElement(1.5f)
+                "соль" -> DisplayedElement(2f)
+                "ля" -> DisplayedElement(2.5f)
+                "си" -> DisplayedElement(3f)
+                "до2" -> DisplayedElement(3.5f)
+                "ре2" -> DisplayedElement(4f)
+                else -> DisplayedElement()
+            })
+        }
+        return result
     }
 
     fun goNext() {
@@ -127,10 +310,11 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             saveTest(
                 MusicTestEntity(
                     serverResponseCollection.value.id.oid,
-                    sectionsId = "0",
+                    testName = serverResponseCollection.value.testName,
+                    sectionsId = serverResponseCollection.value.sectionsId,
                     questionArray = _serverResponseCollection.value.questionArray,
-                    answerArray = _serverResponseCollection.value.answerArray,
-                    displayedElements = _serverResponseCollection.value.displayedElements
+                    teacherId = serverResponseCollection.value.teacherId,
+                    test_id = serverResponseCollection.value.test_id
                 )
             )
             viewModelScope.launch {
@@ -151,20 +335,20 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             }
             return
         } else {
-            _answersList.value = _serverResponseCollection
-                .value.answerArray[_currentQuestionNum.value].shuffled()
-
             _currentRightAnswer.value = _serverResponseCollection
-                .value.answerArray[_currentQuestionNum.value][0]
+                .value.questionArray[_currentQuestionNum.value].answerArray[0]
+
+            _answersList.value = _serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].answerArray.shuffled()
 
             _questionString.value = _serverResponseCollection
-                .value.questionArray[_currentQuestionNum.value]
+                .value.questionArray[_currentQuestionNum.value].questionText
 
             _goNextEvent.value = true
         }
     }
 
-    fun goResult(id: Long) {
+    private fun goResult(id: Long) {
         _goResultEvent.value = id
     }
 
@@ -182,7 +366,7 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     fun setMistake(answer: String) {
         if (currentMistakeList.value.isEmpty()) {
-            _currentMistakeList.value.add(listOf(_serverResponseCollection.value.sectionsId))
+            _currentMistakeList.value.add(listOf(_serverResponseCollection.value.sectionsId[0]))
         }
         _currentMistakeList.value.add(listOf(answer, _questionString.value))
     }

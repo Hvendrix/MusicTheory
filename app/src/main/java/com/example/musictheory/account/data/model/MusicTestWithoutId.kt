@@ -1,16 +1,16 @@
 package com.example.musictheory.account.data.model
 
+import com.example.musictheory.trainingtest.data.model.DisplayedElement
+import com.example.musictheory.trainingtest.data.model.Question
 import com.google.gson.annotations.SerializedName
 
 data class MusicTestWithoutId(
-    @SerializedName("sections_id")
-    val sectionsId: String,
+    @SerializedName("name")
+    val testName: String,
+    @SerializedName("section")
+    val sectionsId: List<String>,
     @SerializedName("question_array")
-    val questionArray: List<String>,
-    @SerializedName("answer_array")
-    val answerArray: List<List<String>>,
-    @SerializedName("dislpayed_elemets")
-    val displayedElements: List<String>,
-    @SerializedName("test_name")
-    val testName: String
+    val questionArray: List<Question>,
+    @SerializedName("teacher_id")
+    val teacherId: String
 )

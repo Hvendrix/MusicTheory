@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="IntNoteImage">
+        <attr name="numLineVertical" format="float" />
+        <attr name="horizontal_position" format="float" />
+
+
+    </declare-styleable>
     <attr name="windowBackground" format="color|reference" />
     <attr name="windowBackgroundVariant" format="color|reference" />
-    <attr name="roundedButton" format="reference"/>
+    <attr name="roundedButton" format="reference" />
+
 
 </resources>

@@ -15,10 +15,7 @@
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/title_notifications" />
-    <item
-            android:title="@string/title_training_test"
-            android:id="@+id/nested_navigation_training_test"
-            android:icon="@android:drawable/ic_menu_set_as" />
+
     <item
             android:id="@+id/nested_personal_account"
             android:title="@string/account"
