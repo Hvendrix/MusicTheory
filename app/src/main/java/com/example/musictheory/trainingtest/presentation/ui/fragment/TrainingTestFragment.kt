@@ -84,14 +84,22 @@ class TrainingTestFragment : Fragment() {
                 launch {
                     trainingTestViewModel.currentQuestionOid.collect {
                         lifecycleScope.launch {
-                            val tests = async {
+                            try {
                                 var token = ""
                                 if (activity is MainActivityCallback) {
                                     token = (activity as MainActivityCallback).getToken()
                                 }
-                                trainingTestViewModel.getTests(token)
+                                if (token!="") {
+                                    val tests = async {
+
+                                        trainingTestViewModel.getTests(token)
+                                    }
+                                    trainingTestViewModel.getData(tests.await())
+                                }
+                            } catch (e: Exception){
+                                Timber.v(e)
                             }
-                            trainingTestViewModel.getData(tests.await())
+
                         }
                     }
                 }
@@ -127,6 +135,9 @@ class TrainingTestFragment : Fragment() {
                     Timber.i("t1 picture fragment")
                     nextBodyFragment =
                         TrainingTestBodyWithImagePicture()
+                }
+                "audio" -> {
+
                 }
             }
             if (nextBodyFragment != null) {

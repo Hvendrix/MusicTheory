@@ -243,9 +243,9 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
     fun defineChord(chord: String): Pair<String, String>{
         return when(chord.lowercase().trim()){
-            "трезвучие", "53" -> Pair("терция", "терция")
+            "трезвучие", "53", "5/3" -> Pair("терция", "терция")
             "секстаккорд", "6"->Pair("терция", "кварта")
-            "квартсекстаккорд", "64"->Pair("кварта", "терция")
+            "квартсекстаккорд", "6/4"->Pair("кварта", "терция")
             else -> {
 
                 Timber.i("t1 не тот аккорд $chord")
@@ -343,6 +343,26 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
 
             _questionString.value = _serverResponseCollection
                 .value.questionArray[_currentQuestionNum.value].questionText
+
+            _generationSeed.value = _serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].generationSeed
+
+            _uiType.value = _serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].uiType
+
+            _displayedElements.value = defineDisplayedElements(_serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].displayedElements)
+
+            _imageAttachmentUrl.value =_serverResponseCollection
+                .value.questionArray[_currentQuestionNum.value].attachmentUrl
+
+            when (_generationSeed.value.get(GenerationSeed.notes.name)) {
+                "from_answers" -> randomPick()
+                "from_answers_double_stops" -> randomPickDoubleStops()
+                "from_answers_chords" -> randomPickChord()
+            }
+
+
 
             _goNextEvent.value = true
         }

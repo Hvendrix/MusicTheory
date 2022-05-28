@@ -32,6 +32,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.Exception
 
 @AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
@@ -267,8 +268,13 @@ class StudentRegistrationFragment : Fragment() {
     }
 
     private fun signIn() {
-        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-        startForResult.launch(signInIntent)
+        try {
+            val signInIntent: Intent = mGoogleSignInClient.signInIntent
+            startForResult.launch(signInIntent)
+        } catch (e: Exception){
+            Timber.i(e)
+        }
+
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {

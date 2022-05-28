@@ -36,6 +36,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.lang.Exception
 
 @AndroidEntryPoint
 class StudentLoginFragment : Fragment() {
@@ -96,12 +98,12 @@ class StudentLoginFragment : Fragment() {
 
 
 
-        val gso = GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.web_client_id))
-            .requestEmail()
-            .build()
-        val account = GoogleSignIn.getLastSignedInAccount(context)
+//        val gso = GoogleSignInOptions
+//            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.web_client_id))
+//            .requestEmail()
+//            .build()
+//        val account = GoogleSignIn.getLastSignedInAccount(context)
 //        if (account != null && account.idToken != null) {
 //            postLoginToServer(account.idToken, "")
 //        }
@@ -109,7 +111,7 @@ class StudentLoginFragment : Fragment() {
 
 //        updateUI(account)
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
+//        mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
 
         loginEditText = binding.loginEt
         passwordEditText = binding.passwordEt
@@ -274,8 +276,13 @@ class StudentLoginFragment : Fragment() {
     }
 
     private fun signIn() {
-        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-        startForResult.launch(signInIntent)
+        try {
+            val signInIntent: Intent = mGoogleSignInClient.signInIntent
+            startForResult.launch(signInIntent)
+        } catch (e: Exception){
+            Timber.i(e)
+        }
+
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
