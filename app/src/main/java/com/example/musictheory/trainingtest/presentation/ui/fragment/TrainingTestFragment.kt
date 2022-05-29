@@ -137,7 +137,8 @@ class TrainingTestFragment : Fragment() {
                         TrainingTestBodyWithImagePicture()
                 }
                 "audio" -> {
-
+                    nextBodyFragment =
+                        TrainingTestBodyWithAudio()
                 }
             }
             if (nextBodyFragment != null) {

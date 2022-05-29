@@ -110,8 +110,18 @@ class AddQuestionFragment : Fragment(), OnCheckRightChangeListener, OnAnswerChan
                 )
             )
         } else {
-            if(!binding.editTextGenerationSeed.text.toString().isNullOrBlank()){
-            personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].generationSeed.set("notes", binding.editTextGenerationSeed.text.toString())
+            if(binding.editTextGenerationSeed.text.toString() == "audio" && !binding.editTextAttachment.text.toString().isNullOrBlank()){
+                personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].generationSeed.set(
+                    "notes",
+                    binding.editTextGenerationSeed.text.toString())
+                personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].uiType="audio"
+            } else if(binding.editTextGenerationSeed.text.toString() == "audio_notes") {
+                personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].uiType="audio"
+            }
+            else if(!binding.editTextGenerationSeed.text.toString().isNullOrBlank()){
+                personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].generationSeed.set(
+                    "notes",
+                    binding.editTextGenerationSeed.text.toString())
                 personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].uiType="stave"
             } else if(!binding.editTextAttachment.text.toString().isNullOrBlank()){
                 personalAccountViewModel.musicTest.value.questionArray[personalAccountViewModel.currentQuestNum.value].uiType="picture"

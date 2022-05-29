@@ -2,6 +2,7 @@ package com.example.musictheory.trainingtest.presentation.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.musictheory.R
 import com.example.musictheory.core.data.Repository
 import com.example.musictheory.core.data.model.Result
 import com.example.musictheory.trainingtest.data.model.*
@@ -66,6 +67,9 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
     private val _displayedElements: MutableStateFlow<List<DisplayedElement>> =
         MutableStateFlow(listOf())
     val displayedElements: StateFlow<List<DisplayedElement>> = _displayedElements.asStateFlow()
+
+    private val _currentAudio: MutableStateFlow<Any?> = MutableStateFlow(null)
+    val currentAudio: StateFlow<Any?> = _currentAudio.asStateFlow()
 
     private val _imageAttachmentUrl: MutableStateFlow<String> =
         MutableStateFlow("")
@@ -144,6 +148,9 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
         _imageAttachmentUrl.value =_serverResponseCollection
             .value.questionArray[_currentQuestionNum.value].attachmentUrl
 
+        _currentAudio.value =_serverResponseCollection
+            .value.questionArray[_currentQuestionNum.value].attachmentUrl
+
         _currentMistakeList.value = mutableListOf()
 
 //        when(_uiType.value){
@@ -154,11 +161,18 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             "from_answers" -> randomPick()
             "from_answers_double_stops" -> randomPickDoubleStops()
             "from_answers_chords" -> randomPickChord()
+            "audio_notes" -> audio_notes()
         }
 
 
 //        _answersList.value = serverResponse.data.collection[0].answerArray[0]
 //        _questionString.emit(serverResponse.data.collection[0].questionArray[0])
+    }
+
+    fun audio_notes(){
+        _currentRightAnswer.value = _answersList.value.shuffled()[0]
+        _currentAudio.value = defineAudioNote(_currentRightAnswer.value)
+
     }
 
     fun randomPickChord() {
@@ -184,6 +198,19 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             _currentRightAnswer.value = _answersList.value.shuffled()[0]
             _displayedElements.value = defineDisplayedElementsDoubleStops(_currentRightAnswer.value)
             Timber.i("t1 disp ${_displayedElements.value.toString()}")
+        }
+    }
+
+    fun defineAudioNote(note: String): Int{
+        return when(note) {
+            "ми" -> R.raw.e
+            "фа" -> R.raw.f
+            "соль" -> R.raw.g
+            "ля" -> R.raw.a
+            "си" -> R.raw.h
+            "до", "до2" -> R.raw.c
+            "ре", "ре2" -> R.raw.d
+            else -> 0
         }
     }
 
@@ -247,7 +274,6 @@ class TrainingTestViewModel @Inject constructor(private val repository: Reposito
             "секстаккорд", "6"->Pair("терция", "кварта")
             "квартсекстаккорд", "6/4"->Pair("кварта", "терция")
             else -> {
-
                 Timber.i("t1 не тот аккорд $chord")
                 Pair("терция", "терция")}
         }
