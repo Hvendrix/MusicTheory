@@ -36,13 +36,13 @@ class AccountFragment : Fragment() {
     ): View? {
         val binding = AccountFragmentBinding.inflate(inflater)
 
-        val gso = GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.web_client_id))
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
+//        val gso = GoogleSignInOptions
+//            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.web_client_id))
+//            .requestEmail()
+//            .build()
+//
+//        mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso)
 
         binding.textViewAccountName.text = personalAccountViewModel.user.value?.login
         when (personalAccountViewModel.user.value?.role) {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:layout_gravity="center_vertical"
+            android:width="80dp"
+            android:height="80dp"
+            android:drawable="@drawable/background_play_btn"
+            android:gravity="center"
+            />
+    <item
+            android:layout_gravity="center_vertical"
+            android:width="80dp"
+            android:height="80dp"
+            android:drawable="@drawable/ic_baseline_stop_circle_24"
+            android:gravity="center"
+            />
+
+
+</layer-list>

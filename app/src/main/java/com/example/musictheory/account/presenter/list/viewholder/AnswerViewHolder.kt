@@ -32,7 +32,8 @@ private val binding: ItemAnswerBinding) : RecyclerView.ViewHolder(binding.root) 
             binding.checkBox.toggle()
 
         binding.checkBox.setOnCheckedChangeListener { compoundButton, b ->
-            onCheckRightChangeListener.onCheckedChanged(compoundButton, b, adapterPosition)
+//            onCheckRightChangeListener.onCheckedChanged(compoundButton, b, adapterPosition)
+
 //        binding.buttonQuestion.text = question.questionText
 //        binding.buttonQuestion.setOnClickListener {
 //            onItemClickListener.onItemClick(question, adapterPosition)
